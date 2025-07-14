@@ -153,9 +153,8 @@ export default function Index() {
                     Никнейм
                   </label>
                   <Input
-                    value="SkyWorker"
+                    value="Ник"
                     className="bg-muted/30 border-border/50 text-foreground text-sm h-8 rounded-lg"
-                    readOnly
                   />
                 </div>
               </div>
