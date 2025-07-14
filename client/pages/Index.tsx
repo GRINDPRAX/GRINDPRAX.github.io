@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Index() {
   const [nickname, setNickname] = useState("Ник");
+  const [status, setStatus] = useState("Игрок");
   const navigate = useNavigate();
   return (
     <div className="dark min-h-screen bg-background text-foreground">
@@ -22,7 +23,7 @@ export default function Index() {
                   size="sm"
                   className="text-foreground/80 hover:text-foreground hover:bg-muted/50"
                 >
-                  🏠 Главная
+                  🏠 Г��авная
                 </Button>
                 <Button
                   variant="ghost"
