@@ -80,13 +80,13 @@ export default function Index() {
       </nav>
 
       {/* Secondary Navigation */}
-      <div className="border-b border-border bg-card/30">
+      <div className="border-b border-border/50 bg-background/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-12 items-center space-x-6">
             <Button
               variant="default"
               size="sm"
-              className="bg-primary hover:bg-primary/90"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
             >
               <User className="mr-2 h-4 w-4" />
               Основное
@@ -94,7 +94,7 @@ export default function Index() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-muted-foreground hover:text-foreground"
+              className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
             >
               <Search className="mr-2 h-4 w-4" />
               Безопасность
@@ -102,7 +102,7 @@ export default function Index() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-muted-foreground hover:text-foreground"
+              className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
             >
               <Bell className="mr-2 h-4 w-4" />
               Соцеон
@@ -110,10 +110,10 @@ export default function Index() {
             <Button
               variant="ghost"
               size="sm"
-              className="text-muted-foreground hover:text-foreground"
+              className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
             >
               <Settings className="mr-2 h-4 w-4" />
-              Устройства
+              Устройств��
             </Button>
           </div>
         </div>
