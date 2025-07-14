@@ -39,7 +39,7 @@ export default function Index() {
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
                 >
                   <Zap className="mr-2 h-4 w-4" />
-                  Зет
+                  Топ
                 </Button>
                 <Button
                   variant="ghost"
