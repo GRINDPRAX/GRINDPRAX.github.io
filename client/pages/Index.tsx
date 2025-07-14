@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 import {
   Home,
   Zap,
@@ -14,6 +15,7 @@ import {
 } from "lucide-react";
 
 export default function Index() {
+  const [nickname, setNickname] = useState("Ник");
   return (
     <div className="dark min-h-screen bg-background text-foreground">
       {/* Top Navigation */}
@@ -89,7 +91,7 @@ export default function Index() {
               className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
             >
               <User className="mr-2 h-4 w-4" />
-              Основное
+              Осно��ное
             </Button>
             <Button
               variant="ghost"
