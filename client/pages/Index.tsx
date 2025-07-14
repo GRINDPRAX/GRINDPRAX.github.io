@@ -63,7 +63,7 @@ export default function Index() {
                 className="bg-primary text-primary-foreground rounded-md px-2 py-1 cursor-pointer hover:bg-primary/90 transition-colors"
                 onClick={() => navigate("/statistics")}
               >
-                MT
+                FI
               </Badge>
             </div>
           </div>
