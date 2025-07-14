@@ -10,7 +10,6 @@ import {
   BarChart3,
   Shield,
   User,
-  Search,
   Bell,
 } from "lucide-react";
 
