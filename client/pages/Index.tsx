@@ -181,7 +181,7 @@ export default function Index() {
                 </label>
                 <Input
                   value={status}
-                  ReadOnlt
+                  ReadOnly
                   onChange={(e) => setStatus(e.target.value)}
                   className="bg-muted/30 border-border/50 text-foreground text-sm h-8 rounded-lg"
                   placeholder="Введите ваш статус"
