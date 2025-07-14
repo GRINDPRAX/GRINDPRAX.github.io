@@ -173,7 +173,7 @@ export default function Statistics() {
                       <div className="text-blue-400">📧</div>
                       <div>
                         <div className="text-sm font-medium text-foreground">
-                          durno2007@yandex.ru
+                          тут@поч.та
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Электронная почта
