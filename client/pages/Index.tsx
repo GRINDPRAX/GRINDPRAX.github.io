@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Index() {
   const [nickname, setNickname] = useState("Ник");
+  const navigate = useNavigate();
   return (
     <div className="dark min-h-screen bg-background text-foreground">
       {/* Top Navigation */}
@@ -90,7 +91,7 @@ export default function Index() {
               size="sm"
               className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
             >
-              ���� Соцсети
+              🔔 Соцсети
             </Button>
             <Button
               variant="ghost"
