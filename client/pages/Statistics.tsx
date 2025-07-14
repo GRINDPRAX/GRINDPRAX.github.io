@@ -187,7 +187,7 @@ export default function Statistics() {
                       <div className="text-blue-400">📅</div>
                       <div>
                         <div className="text-sm font-medium text-foreground">
-                          2025-06-08
+                          тут-да-та
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Дата регистрации
