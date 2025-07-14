@@ -38,7 +38,7 @@ export default function Index() {
                   size="sm"
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
                 >
-                  <Zap className="mr-2 h-4 w-4" />
+                  <FontAwesomeIcon icon="bolt" className="mr-2 h-4 w-4" />
                   Топ
                 </Button>
                 <Button
