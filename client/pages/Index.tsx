@@ -23,7 +23,7 @@ export default function Index() {
                   size="sm"
                   className="text-foreground/80 hover:text-foreground hover:bg-muted/50"
                 >
-                  🏠 Г��авная
+                  🏠 Главная
                 </Button>
                 <Button
                   variant="ghost"
@@ -180,8 +180,10 @@ export default function Index() {
                   Статус
                 </label>
                 <Input
-                  value="Игрок"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
                   className="bg-muted/30 border-border/50 text-foreground text-sm h-8 rounded-lg"
+                  placeholder="Введите ваш статус"
                 />
               </div>
             </div>
