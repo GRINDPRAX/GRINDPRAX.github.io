@@ -173,7 +173,7 @@ export default function Index() {
                     variant="ghost"
                     className="text-white hover:bg-white/20 h-8 w-8 rounded-lg"
                   >
-                    →
+                    ➡️
                   </Button>
                 </div>
               </div>
