@@ -3,16 +3,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  Home,
-  Zap,
-  Settings,
-  BarChart3,
-  Shield,
-  User,
-  Bell,
-} from "lucide-react";
 
 export default function Index() {
   const [nickname, setNickname] = useState("Ник");
