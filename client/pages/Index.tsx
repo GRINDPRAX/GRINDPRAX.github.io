@@ -47,7 +47,7 @@ export default function Index() {
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
                 >
                   <Settings className="mr-2 h-4 w-4" />
-                  Модуили
+                  Магазин
                 </Button>
                 <Button
                   variant="ghost"
