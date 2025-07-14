@@ -15,7 +15,7 @@ import {
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="dark min-h-screen bg-background text-foreground">
       {/* Top Navigation */}
       <nav className="border-b border-border bg-card/50 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
