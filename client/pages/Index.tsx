@@ -126,6 +126,7 @@ export default function Index() {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold text-foreground">Профиль</h1>
           <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg">
+            <FontAwesomeIcon icon="save" className="mr-2 h-4 w-4" />
             Сохранить
           </Button>
         </div>
