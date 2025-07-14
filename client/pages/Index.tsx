@@ -30,8 +30,7 @@ export default function Index() {
                   size="sm"
                   className="text-foreground/80 hover:text-foreground hover:bg-muted/50"
                 >
-                  <FontAwesomeIcon icon="home" className="mr-2 h-4 w-4" />
-                  Главная
+                  🏠 Главная
                 </Button>
                 <Button
                   variant="ghost"
