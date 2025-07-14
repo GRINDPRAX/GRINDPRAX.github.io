@@ -1,5 +1,7 @@
 {
-  "name": "fusion-starter",
+  "name": "fusion-dashboard",
+  "version": "1.0.0",
+  "description": "Modern dashboard application with React, TypeScript and Tailwind CSS",
   "private": true,
   "type": "module",
   "pkg": {
