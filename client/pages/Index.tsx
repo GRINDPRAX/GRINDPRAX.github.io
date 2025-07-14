@@ -91,7 +91,7 @@ export default function Index() {
               className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
             >
               <User className="mr-2 h-4 w-4" />
-              Осно��ное
+              Основное
             </Button>
             <Button
               variant="ghost"
@@ -155,8 +155,10 @@ export default function Index() {
                     Никнейм
                   </label>
                   <Input
-                    value="Ник"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
                     className="bg-muted/30 border-border/50 text-foreground text-sm h-8 rounded-lg"
+                    placeholder="Введите ваш никнейм"
                   />
                 </div>
               </div>
