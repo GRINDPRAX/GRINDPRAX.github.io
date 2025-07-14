@@ -31,7 +31,7 @@ export default function Index() {
                   className="text-foreground/80 hover:text-foreground hover:bg-muted/50"
                 >
                   <Home className="mr-2 h-4 w-4" />
-                  Профиль
+                  Главная
                 </Button>
                 <Button
                   variant="ghost"
