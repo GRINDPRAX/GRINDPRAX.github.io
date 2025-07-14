@@ -18,7 +18,6 @@ export default function Statistics() {
                   variant="ghost"
                   size="sm"
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/")}
                 >
                   🏠 Главная
                 </Button>
@@ -67,7 +66,7 @@ export default function Statistics() {
                 variant="secondary"
                 className="bg-primary text-primary-foreground rounded-md px-2 py-1"
               >
-                MT
+                FI
               </Badge>
             </div>
           </div>
