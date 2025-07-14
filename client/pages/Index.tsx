@@ -54,7 +54,7 @@ export default function Index() {
                   size="sm"
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
                 >
-                  <BarChart3 className="mr-2 h-4 w-4" />
+                  <FontAwesomeIcon icon="chart-line" className="mr-2 h-4 w-4" />
                   Статистика
                 </Button>
                 <Button
