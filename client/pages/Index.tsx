@@ -195,7 +195,7 @@ export default function Index() {
                   Статус
                 </label>
                 <Input
-                  value="Hero"
+                  value="Игрок"
                   className="bg-muted/30 border-border/50 text-foreground text-sm h-8 rounded-lg"
                 />
               </div>
