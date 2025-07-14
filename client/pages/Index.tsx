@@ -127,7 +127,7 @@ export default function Index() {
             <Card className="p-4 bg-card border-border/50 rounded-xl">
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto mb-3 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
-                  <User className="w-10 h-10 text-primary" />
+                  <span className="text-4xl">👤</span>
                 </div>
                 <Button
                   variant="outline"
