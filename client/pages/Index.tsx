@@ -99,8 +99,7 @@ export default function Index() {
               size="sm"
               className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
             >
-              <Bell className="mr-2 h-4 w-4" />
-              Соцсети
+              🔔 Соцсети
             </Button>
             <Button
               variant="ghost"
