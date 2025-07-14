@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function Index() {
   const [nickname, setNickname] = useState("Ник");
-  const [status, setStatus] = useState("Игрок");
   const navigate = useNavigate();
   return (
     <div className="dark min-h-screen bg-background text-foreground">
