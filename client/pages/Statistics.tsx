@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 
 export default function Statistics() {
+  const navigate = useNavigate();
   return (
     <div className="dark min-h-screen bg-background text-foreground">
       {/* Top Navigation */}
