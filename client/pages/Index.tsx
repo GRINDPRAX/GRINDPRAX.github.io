@@ -17,16 +17,16 @@ export default function Index() {
   return (
     <div className="dark min-h-screen bg-background text-foreground">
       {/* Top Navigation */}
-      <nav className="border-b border-border bg-card/50 backdrop-blur-sm">
+      <nav className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
+          <div className="flex h-14 items-center justify-between">
             {/* Left side navigation */}
             <div className="flex items-center space-x-8">
               <div className="flex items-center space-x-6">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-foreground/80 hover:text-foreground hover:bg-muted/50"
                 >
                   <Home className="mr-2 h-4 w-4" />
                   Профиль
@@ -34,7 +34,7 @@ export default function Index() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
                 >
                   <Zap className="mr-2 h-4 w-4" />
                   Зет
@@ -42,7 +42,7 @@ export default function Index() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
                 >
                   <Settings className="mr-2 h-4 w-4" />
                   Модуили
@@ -50,7 +50,7 @@ export default function Index() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
                 >
                   <BarChart3 className="mr-2 h-4 w-4" />
                   Сноитгепс
@@ -58,7 +58,7 @@ export default function Index() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
                 >
                   <Shield className="mr-2 h-4 w-4" />
                   Администрация
@@ -70,7 +70,7 @@ export default function Index() {
             <div className="flex items-center space-x-4">
               <Badge
                 variant="secondary"
-                className="bg-primary text-primary-foreground"
+                className="bg-primary text-primary-foreground rounded-md px-2 py-1"
               >
                 MT
               </Badge>
