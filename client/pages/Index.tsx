@@ -113,33 +113,33 @@ export default function Index() {
               className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
             >
               <Settings className="mr-2 h-4 w-4" />
-              Устройств��
+              Устройства
             </Button>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-foreground">Профиль</h1>
-          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-semibold text-foreground">Профиль</h1>
+          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg">
             Сохранить
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left Column - Profile Card */}
           <div className="lg:col-span-1">
-            <Card className="p-6 bg-card border-border">
+            <Card className="p-4 bg-card border-border/50 rounded-xl">
               <div className="text-center">
-                <div className="w-24 h-24 mx-auto mb-4 rounded-lg bg-primary/20 flex items-center justify-center">
-                  <User className="w-12 h-12 text-primary" />
+                <div className="w-20 h-20 mx-auto mb-3 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                  <User className="w-10 h-10 text-primary" />
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-border text-muted-foreground hover:text-foreground mb-4"
+                  className="border-border/50 text-foreground/70 hover:text-foreground hover:bg-muted/50 mb-4 rounded-lg text-xs"
                 >
                   Изменить
                   <br />
@@ -147,14 +147,14 @@ export default function Index() {
                 </Button>
               </div>
 
-              <div className="space-y-4 mt-6">
+              <div className="space-y-3 mt-4">
                 <div>
-                  <label className="text-sm text-muted-foreground mb-2 block">
+                  <label className="text-xs text-foreground/60 mb-1 block">
                     Никнейм
                   </label>
                   <Input
                     value="SkyWorker"
-                    className="bg-background border-border text-foreground"
+                    className="bg-muted/30 border-border/50 text-foreground text-sm h-8 rounded-lg"
                     readOnly
                   />
                 </div>
@@ -163,23 +163,21 @@ export default function Index() {
           </div>
 
           {/* Right Column - Main Content */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             {/* Banner Card */}
-            <Card className="mb-6 overflow-hidden border-border">
-              <div className="relative h-48 bg-gradient-to-r from-primary/80 via-primary to-primary/60">
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-600/90 via-orange-500 to-orange-400/90"></div>
+            <Card className="mb-4 overflow-hidden border-border/50 rounded-xl">
+              <div className="relative h-36 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-400">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-600/95 via-orange-500/90 to-orange-400/85"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center text-white">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Изменить банер
-                    </h3>
+                    <h3 className="text-sm font-medium">Изменить банер</h3>
                   </div>
                 </div>
-                <div className="absolute top-4 right-4">
+                <div className="absolute top-3 right-3">
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="text-white hover:bg-white/20"
+                    className="text-white hover:bg-white/20 h-8 w-8 rounded-lg"
                   >
                     →
                   </Button>
@@ -188,14 +186,14 @@ export default function Index() {
             </Card>
 
             {/* Status Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-muted-foreground mb-2 block">
+                <label className="text-xs text-foreground/60 mb-1 block">
                   Статус
                 </label>
                 <Input
                   value="Hero"
-                  className="bg-background border-border text-foreground"
+                  className="bg-muted/30 border-border/50 text-foreground text-sm h-8 rounded-lg"
                 />
               </div>
             </div>
