@@ -181,7 +181,7 @@ export default function Index() {
                 </label>
                 <Input
                   value={status}
-                  ReadOnly
+                  readonly
                   className="bg-muted/30 border-border/50 text-foreground text-sm h-8 rounded-lg"
                   
                 />
