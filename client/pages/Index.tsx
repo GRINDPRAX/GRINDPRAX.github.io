@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Index() {
   const [nickname, setNickname] = useState("Ник");
@@ -89,7 +90,7 @@ export default function Index() {
               size="sm"
               className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
             >
-              🔔 Соцсети
+              ���� Соцсети
             </Button>
             <Button
               variant="ghost"
