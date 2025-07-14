@@ -98,7 +98,7 @@ export default function Statistics() {
                   <div className="text-sm text-muted-foreground space-y-1">
                     <div className="flex items-center">
                       <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-                      <span>#4 Аарон в зайте Тамада MR</span>
+                      <span>#был онлайн только что</span>
                     </div>
                   </div>
                 </div>
