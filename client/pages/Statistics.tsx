@@ -93,7 +93,7 @@ export default function Statistics() {
               <div className="space-y-4">
                 <div>
                   <h3 className="font-semibold text-foreground mb-2">
-                    SkyWorker
+                    ТутНик
                   </h3>
                   <div className="text-sm text-muted-foreground space-y-1">
                     <div className="flex items-center">
