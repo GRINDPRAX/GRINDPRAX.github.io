@@ -32,6 +32,9 @@ export default function Admin() {
   const [screenshot, setScreenshot] = useState<string>("");
   const [teamAScore, setTeamAScore] = useState<number>(0);
   const [teamBScore, setTeamBScore] = useState<number>(0);
+  const [playerStats, setPlayerStats] = useState<
+    Array<{ userId: string; kills: number; deaths: number }>
+  >([]);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -331,7 +334,7 @@ export default function Admin() {
                   disabled={!matchName.trim() || creating}
                   className="w-full"
                 >
-                  {creating ? "Создание..." : "Создать матч"}
+                  {creating ? "Соз��ание..." : "Создать матч"}
                 </Button>
               </div>
             </Card>
