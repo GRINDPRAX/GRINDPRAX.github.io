@@ -186,6 +186,7 @@ export default function Admin() {
         setScreenshot("");
         setTeamAScore(0);
         setTeamBScore(0);
+        setPlayerStats([]);
         // Reload matches
         const matchesResponse = await fetch("/api/matches");
         if (matchesResponse.ok) {
@@ -334,7 +335,7 @@ export default function Admin() {
                   disabled={!matchName.trim() || creating}
                   className="w-full"
                 >
-                  {creating ? "Соз��ание..." : "Создать матч"}
+                  {creating ? "Создание..." : "Создать матч"}
                 </Button>
               </div>
             </Card>
@@ -415,7 +416,7 @@ export default function Admin() {
                   disabled={!selectedMatch || uploading}
                   className="w-full"
                 >
-                  {uploading ? "Загрузка..." : "Загрузить результаты"}
+                  {uploading ? "Загрузк��..." : "Загрузить результаты"}
                 </Button>
               </div>
             </Card>
