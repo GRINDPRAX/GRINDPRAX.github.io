@@ -113,9 +113,7 @@ export default function Statistics() {
               {/* User Info */}
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-semibold text-foreground mb-2">
-                    ТутНик
-                  </h3>
+                  <h3 className="font-semibold text-foreground mb-2">ТутНик</h3>
                   <div className="text-sm text-muted-foreground space-y-1">
                     <div className="flex items-center">
                       <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
