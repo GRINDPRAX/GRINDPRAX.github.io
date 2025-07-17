@@ -38,32 +38,26 @@ export const getUserByIdHandler: RequestHandler[] = [
 ];
 
 // Обновить пользователя (только для админов)
-export const updateUserHandler: RequestHandler = (req, res) => {
-  const { userId } = req.params;
-  const adminId = req.headers.authorization?.replace("Bearer ", "");
-  const updates = req.body;
+export const updateUserHandler: RequestHandler[] = [
+  requireAuth,
+  requireAdmin,
+  (req, res) => {
+    const { userId } = req.params;
+    const updates = req.body;
 
-  if (!adminId) {
-    return res.status(401).json({ error: "Authorization required" });
-  }
+    try {
+      const updatedUser = updateUser(userId, updates);
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
 
-  const admin = getUserById(adminId);
-  if (!admin || admin.status !== "Администратор") {
-    return res.status(403).json({ error: "Admin access required" });
-  }
-
-  try {
-    const updatedUser = updateUser(userId, updates);
-    if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
+      const profile = userToProfile(updatedUser);
+      res.json(profile);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update user" });
     }
-
-    const profile = userToProfile(updatedUser);
-    res.json(profile);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to update user" });
-  }
-};
+  },
+];
 
 // Удалить пользователя (только для админов)
 export const deleteUserHandler: RequestHandler = (req, res) => {
