@@ -240,7 +240,15 @@ export default function Admin() {
                   size="sm"
                   className="text-foreground/80 hover:text-foreground hover:bg-muted/50"
                 >
-                  🛡️ Администрация
+                  🛡️ Матчи
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+                  onClick={() => navigate("/admin/users")}
+                >
+                  👥 Пользователи
                 </Button>
               </div>
             </div>
@@ -350,7 +358,7 @@ export default function Admin() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="teamAScore">Счет команды A</Label>
+                    <Label htmlFor="teamAScore">Счет к��манды A</Label>
                     <Input
                       id="teamAScore"
                       type="number"
