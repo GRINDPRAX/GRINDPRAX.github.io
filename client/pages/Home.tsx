@@ -98,7 +98,21 @@ const activeMatches: Match[] = [
 
 export default function Home() {
   const [currentBanner, setCurrentBanner] = useState(0);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is logged in
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (err) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+      }
+    }
+  }, []);
 
   // Auto-scroll banners every 5 seconds
   useEffect(() => {
