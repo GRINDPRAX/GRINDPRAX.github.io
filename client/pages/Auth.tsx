@@ -96,7 +96,7 @@ export default function Auth() {
       <div className="w-full max-w-md">
         {/* Logo/Title */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-primary mb-2">FusionI</h1>
+          <h1 className="text-3xl font-bold text-primary mb-2">FaceIt</h1>
           <p className="text-foreground/60">
             {isLogin ? "Войдите в свой аккаунт" : "Создайте новый аккаунт"}
           </p>
