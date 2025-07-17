@@ -414,9 +414,9 @@ export default function Profile() {
                 </label>
                 <Input
                   value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                  className="bg-muted/30 border-border/50 text-foreground text-sm h-8 rounded-lg"
-                  placeholder="Введите ваш статус"
+                  disabled
+                  className="bg-muted/20 border-border/30 text-foreground/60 text-sm h-8 rounded-lg"
+                  placeholder="Статус нельзя изменить"
                 />
               </div>
             </div>
