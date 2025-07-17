@@ -106,8 +106,7 @@ export const register: RequestHandler = (req, res) => {
       lastLogin: new Date().toISOString(),
     });
 
-    const token = generateToken();
-    sessions.set(token, newUser.id);
+    const token = createSession(newUser.id);
 
     const response: AuthResponse = {
       success: true,
@@ -198,7 +197,7 @@ export const updateProfile: RequestHandler = (req, res) => {
   } catch (error) {
     const response: AuthResponse = {
       success: false,
-      message: "Внутренняя ��шибка сервера",
+      message: "Внутренняя ошибка сервера",
     };
     res.status(500).json(response);
   }
