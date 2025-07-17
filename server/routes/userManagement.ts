@@ -86,36 +86,30 @@ export const deleteUserHandler: RequestHandler[] = [
 ];
 
 // Выдать/убрать админские права (только для админов)
-export const toggleAdminStatus: RequestHandler = (req, res) => {
-  const { userId } = req.params;
-  const { makeAdmin } = req.body; // boolean
-  const adminId = req.headers.authorization?.replace("Bearer ", "");
+export const toggleAdminStatus: RequestHandler[] = [
+  requireAuth,
+  requireAdmin,
+  (req, res) => {
+    const { userId } = req.params;
+    const { makeAdmin } = req.body; // boolean
 
-  if (!adminId) {
-    return res.status(401).json({ error: "Authorization required" });
-  }
-
-  const admin = getUserById(adminId);
-  if (!admin || admin.status !== "Администратор") {
-    return res.status(403).json({ error: "Admin access required" });
-  }
-
-  const targetUser = getUserById(userId);
-  if (!targetUser) {
-    return res.status(404).json({ error: "User not found" });
-  }
-
-  try {
-    const newStatus = makeAdmin ? "Администратор" : "Игрок";
-    const updatedUser = updateUser(userId, { status: newStatus });
-
-    if (!updatedUser) {
+    const targetUser = getUserById(userId);
+    if (!targetUser) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const profile = userToProfile(updatedUser);
-    res.json(profile);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to update admin status" });
-  }
-};
+    try {
+      const newStatus = makeAdmin ? "Администратор" : "Игрок";
+      const updatedUser = updateUser(userId, { status: newStatus });
+
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const profile = userToProfile(updatedUser);
+      res.json(profile);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update admin status" });
+    }
+  },
+];
