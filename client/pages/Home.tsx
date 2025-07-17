@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Clock, Users, Trophy } from "lucide-react";
+import { UserProfile } from "@shared/user";
 
 interface Banner {
   id: number;
