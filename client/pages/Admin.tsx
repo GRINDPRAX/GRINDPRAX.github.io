@@ -151,6 +151,35 @@ export default function Admin() {
     }
   };
 
+  const handleMatchSelection = (matchId: string) => {
+    setSelectedMatch(matchId);
+
+    // Инициализируем статистику для всех игроков выбранного матча
+    const match = matches.find((m) => m.id === matchId);
+    if (match) {
+      const initialStats = match.currentPlayers.map((playerId) => ({
+        userId: playerId,
+        kills: 0,
+        deaths: 0,
+      }));
+      setPlayerStats(initialStats);
+    }
+  };
+
+  const updatePlayerStat = (
+    userId: string,
+    field: "kills" | "deaths",
+    value: number,
+  ) => {
+    setPlayerStats((prev) =>
+      prev.map((stat) =>
+        stat.userId === userId
+          ? { ...stat, [field]: Math.max(0, value) }
+          : stat,
+      ),
+    );
+  };
+
   const handleUploadResults = async () => {
     if (!selectedMatch || !user) return;
 
