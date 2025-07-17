@@ -381,7 +381,7 @@ export default function Admin() {
                   <Label htmlFor="selectMatch">Выберите матч</Label>
                   <Select
                     value={selectedMatch}
-                    onValueChange={setSelectedMatch}
+                    onValueChange={handleMatchSelection}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Вы��ерите матч" />
