@@ -274,10 +274,10 @@ export default function Admin() {
           {/* Header */}
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold text-primary">
-              🛡️ Панель администратора
+              🛡️ Управление матчами
             </h1>
             <p className="text-muted-foreground">
-              Управление матчами и результатами
+              Создание матчей и загрузка результатов
             </p>
           </div>
 
@@ -358,7 +358,7 @@ export default function Admin() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="teamAScore">Счет к��манды A</Label>
+                    <Label htmlFor="teamAScore">Счет команды A</Label>
                     <Input
                       id="teamAScore"
                       type="number"
