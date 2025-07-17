@@ -46,7 +46,7 @@ export default function Lobby() {
           return;
         }
 
-        const matchData = await response.json();
+        const matchData = await matchResponse.json();
         setMatch(matchData);
 
         // Check if user is in this match
