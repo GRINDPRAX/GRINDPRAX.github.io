@@ -16,6 +16,7 @@ import {
   JoinMatchRequest,
   UploadResultsRequest,
 } from "@shared/match";
+import { requireAuth, requireAdmin } from "../middleware";
 
 // Получить все матчи
 export const getMatches: RequestHandler = (req, res) => {
