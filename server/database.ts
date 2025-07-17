@@ -182,7 +182,7 @@ function initDatabase(): Database {
           rating: 9999,
           kd: 999.9,
           registrationDate: "2022-01-01T00:00:00Z",
-          status: "Администратор",
+          status: "Супер Администратор",
           level: 99,
           wins: 0,
           losses: 0,

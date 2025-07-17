@@ -10,7 +10,7 @@ import {
   addChatMessage,
   deleteMatch,
 } from "../matchDatabase";
-import { getUserById } from "../database";
+import { getUserById, updateUser } from "../database";
 import {
   CreateMatchRequest,
   JoinMatchRequest,
@@ -109,7 +109,7 @@ export const uploadResults: RequestHandler[] = [
   requireAdmin,
   (req, res) => {
     const { matchId } = req.params;
-    const { screenshot, teamAScore, teamBScore, teamA, teamB } =
+    const { screenshot, teamAScore, teamBScore, teamA, teamB, playerStats } =
       req.body as UploadResultsRequest;
     const adminId = (req as any).userId;
 
@@ -125,9 +125,45 @@ export const uploadResults: RequestHandler[] = [
         teamBScore,
         teamA,
         teamB,
+        playerStats,
         uploadedBy: adminId,
         uploadedAt: new Date().toISOString(),
       };
+
+      // Определяем команду-победителя
+      const teamAWon = teamAScore > teamBScore;
+      const teamBWon = teamBScore > teamAScore;
+
+      // Обновляем статистику игроков
+      for (const playerId of match.currentPlayers) {
+        const user = getUserById(playerId);
+        if (!user) continue;
+
+        const playerStat = playerStats.find((stat) => stat.userId === playerId);
+        const kills = playerStat?.kills || 0;
+        const deaths = playerStat?.deaths || 0;
+
+        // Определяем, выиграл ли игрок
+        const playerWon = teamA.includes(playerId) ? teamAWon : teamBWon;
+
+        // Обно��ляем статистику
+        const newRating = playerWon ? user.rating + 30 : user.rating - 20;
+        const newKills = kills;
+        const newDeaths = deaths;
+        const newKd = newDeaths > 0 ? newKills / newDeaths : newKills;
+        const newWins = playerWon ? user.wins + 1 : user.wins;
+        const newLosses = !playerWon ? user.losses + 1 : user.losses;
+        const newTotalMatches = user.totalMatches + 1;
+
+        // Обновляем пользователя в базе данных
+        updateUser(playerId, {
+          rating: Math.max(0, newRating), // рейтинг не может быть отрицательным
+          kd: newKd,
+          wins: newWins,
+          losses: newLosses,
+          totalMatches: newTotalMatches,
+        });
+      }
 
       const updatedMatch = uploadMatchResults(matchId, results);
       res.json(updatedMatch);

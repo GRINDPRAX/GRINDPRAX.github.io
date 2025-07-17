@@ -41,7 +41,7 @@ const banners: Banner[] = [
     title: "Лучший FACEIT по PROJECT EVOLTION",
     description: "Реально лучший",
     imageUrl: "",
-    link: "/updates/new-heroes",
+    link: "t.me/BOPUEM",
     gradient: "from-blue-600 via-purple-500 to-pink-400",
   },
   {
@@ -49,7 +49,7 @@ const banners: Banner[] = [
     title: "Премиум пропуск",
     description: "Получите эксклюзивные награды",
     imageUrl: "",
-    link: "/shop/premium-pass",
+    link: "t.me/BOPUEM",
     gradient: "from-green-600 via-teal-500 to-cyan-400",
   },
 ];
@@ -398,8 +398,37 @@ export default function Home() {
                     variant="outline"
                     size="sm"
                     className="w-full mt-3"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
+
+                      if (!user) {
+                        navigate("/auth");
+                        return;
+                      }
+
+                      if (match.currentPlayers.length >= match.maxPlayers) {
+                        return;
+                      }
+
+                      // Join match
+                      try {
+                        const response = await fetch("/api/matches/join", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            matchId: match.id,
+                            userId: user.id,
+                          }),
+                        });
+
+                        if (response.ok) {
+                          navigate(`/lobby/${match.id}`);
+                        }
+                      } catch (err) {
+                        console.error("Error joining match:", err);
+                      }
                     }}
                   >
                     {user

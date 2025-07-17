@@ -32,6 +32,9 @@ export default function Admin() {
   const [screenshot, setScreenshot] = useState<string>("");
   const [teamAScore, setTeamAScore] = useState<number>(0);
   const [teamBScore, setTeamBScore] = useState<number>(0);
+  const [playerStats, setPlayerStats] = useState<
+    Array<{ userId: string; kills: number; deaths: number }>
+  >([]);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -148,6 +151,35 @@ export default function Admin() {
     }
   };
 
+  const handleMatchSelection = (matchId: string) => {
+    setSelectedMatch(matchId);
+
+    // Инициализируем статистику для всех игроков выбранного матча
+    const match = matches.find((m) => m.id === matchId);
+    if (match) {
+      const initialStats = match.currentPlayers.map((playerId) => ({
+        userId: playerId,
+        kills: 0,
+        deaths: 0,
+      }));
+      setPlayerStats(initialStats);
+    }
+  };
+
+  const updatePlayerStat = (
+    userId: string,
+    field: "kills" | "deaths",
+    value: number,
+  ) => {
+    setPlayerStats((prev) =>
+      prev.map((stat) =>
+        stat.userId === userId
+          ? { ...stat, [field]: Math.max(0, value) }
+          : stat,
+      ),
+    );
+  };
+
   const handleUploadResults = async () => {
     if (!selectedMatch || !user) return;
 
@@ -175,6 +207,7 @@ export default function Admin() {
           teamBScore,
           teamA,
           teamB,
+          playerStats,
         }),
       });
 
@@ -183,6 +216,7 @@ export default function Admin() {
         setScreenshot("");
         setTeamAScore(0);
         setTeamBScore(0);
+        setPlayerStats([]);
         // Reload matches
         const matchesResponse = await fetch("/api/matches");
         if (matchesResponse.ok) {
@@ -347,7 +381,7 @@ export default function Admin() {
                   <Label htmlFor="selectMatch">Выберите матч</Label>
                   <Select
                     value={selectedMatch}
-                    onValueChange={setSelectedMatch}
+                    onValueChange={handleMatchSelection}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Вы��ерите матч" />
@@ -387,6 +421,70 @@ export default function Admin() {
                     />
                   </div>
                 </div>
+
+                {/* Статистика игроков */}
+                {selectedMatch && playerStats.length > 0 && (
+                  <div>
+                    <Label>Статистика игроков</Label>
+                    <div className="mt-2 space-y-2 max-h-40 overflow-y-auto border rounded p-2">
+                      {playerStats.map((stat) => {
+                        const match = matches.find(
+                          (m) => m.id === selectedMatch,
+                        );
+                        const user = matches
+                          .find((m) => m.id === selectedMatch)
+                          ?.currentPlayers.find(
+                            (playerId) => playerId === stat.userId,
+                          );
+                        // Получаем никнейм игрока (в реальном приложении это нужно загружать с сервера)
+                        const playerNickname = `Игрок ${stat.userId.slice(0, 6)}`;
+
+                        return (
+                          <div
+                            key={stat.userId}
+                            className="grid grid-cols-3 gap-2 items-center"
+                          >
+                            <span className="text-sm font-medium">
+                              {playerNickname}
+                            </span>
+                            <div>
+                              <Label className="text-xs">Убийства</Label>
+                              <Input
+                                type="number"
+                                value={stat.kills}
+                                onChange={(e) =>
+                                  updatePlayerStat(
+                                    stat.userId,
+                                    "kills",
+                                    parseInt(e.target.value) || 0,
+                                  )
+                                }
+                                min="0"
+                                className="h-8"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-xs">Смерти</Label>
+                              <Input
+                                type="number"
+                                value={stat.deaths}
+                                onChange={(e) =>
+                                  updatePlayerStat(
+                                    stat.userId,
+                                    "deaths",
+                                    parseInt(e.target.value) || 0,
+                                  )
+                                }
+                                min="0"
+                                className="h-8"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 <div>
                   <Label htmlFor="screenshot">Скриншот результатов</Label>

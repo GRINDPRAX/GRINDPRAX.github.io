@@ -201,6 +201,8 @@ export default function AdminUsers() {
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
+      case "Супер Администратор":
+        return "destructive";
       case "Администратор":
         return "destructive";
       case "Чемпион":
@@ -364,27 +366,30 @@ export default function AdminUsers() {
                           Редактировать
                         </Button>
 
-                        {userItem.status !== "Администратор" ? (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => handleToggleAdmin(userItem.id, true)}
-                          >
-                            Сдела��ь админом
-                          </Button>
-                        ) : (
-                          userItem.id !== user?.id && (
+                        {user?.status === "Супер Администратор" &&
+                          (userItem.status !== "Администратор" ? (
                             <Button
-                              variant="outline"
+                              variant="secondary"
                               size="sm"
                               onClick={() =>
-                                handleToggleAdmin(userItem.id, false)
+                                handleToggleAdmin(userItem.id, true)
                               }
                             >
-                              Убрать админа
+                              Сделать админом
                             </Button>
-                          )
-                        )}
+                          ) : (
+                            userItem.id !== user?.id && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  handleToggleAdmin(userItem.id, false)
+                                }
+                              >
+                                Убрать админа
+                              </Button>
+                            )
+                          ))}
 
                         {userItem.id !== user?.id && (
                           <Button
@@ -461,7 +466,9 @@ export default function AdminUsers() {
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            rating: parseInt(e.target.value),
+                            rating: isNaN(parseInt(e.target.value))
+                              ? 0
+                              : parseInt(e.target.value),
                           })
                         }
                       />
@@ -475,7 +482,9 @@ export default function AdminUsers() {
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            level: parseInt(e.target.value),
+                            level: isNaN(parseInt(e.target.value))
+                              ? 1
+                              : parseInt(e.target.value),
                           })
                         }
                       />
@@ -509,6 +518,11 @@ export default function AdminUsers() {
                         <SelectItem value="Администратор">
                           Администратор
                         </SelectItem>
+                        {user?.status === "Супер Администратор" && (
+                          <SelectItem value="Супер Администратор">
+                            Супер Администратор
+                          </SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
                   </div>
@@ -525,7 +539,9 @@ export default function AdminUsers() {
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            wins: parseInt(e.target.value),
+                            wins: isNaN(parseInt(e.target.value))
+                              ? 0
+                              : parseInt(e.target.value),
                           })
                         }
                       />
@@ -539,7 +555,9 @@ export default function AdminUsers() {
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            losses: parseInt(e.target.value),
+                            losses: isNaN(parseInt(e.target.value))
+                              ? 0
+                              : parseInt(e.target.value),
                           })
                         }
                       />
@@ -556,7 +574,9 @@ export default function AdminUsers() {
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            totalMatches: parseInt(e.target.value),
+                            totalMatches: isNaN(parseInt(e.target.value))
+                              ? 0
+                              : parseInt(e.target.value),
                           })
                         }
                       />
@@ -571,7 +591,9 @@ export default function AdminUsers() {
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            kd: parseFloat(e.target.value),
+                            kd: isNaN(parseFloat(e.target.value))
+                              ? 0
+                              : parseFloat(e.target.value),
                           })
                         }
                       />
