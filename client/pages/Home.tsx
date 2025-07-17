@@ -198,7 +198,7 @@ export default function Home() {
               <Badge
                 variant="secondary"
                 className="bg-primary text-primary-foreground rounded-md px-2 py-1 cursor-pointer hover:bg-primary/90 transition-colors"
-                onClick={() => navigate("/profile")}
+                onClick={() => navigate("/statistics")}
               >
                 FI
               </Badge>
