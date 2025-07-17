@@ -203,7 +203,7 @@ export default function Home() {
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
                   onClick={() => navigate("/statistics")}
                 >
-                  ���️ Администрация
+                  🛡️ Администрация
                 </Button>
               </div>
             </div>
