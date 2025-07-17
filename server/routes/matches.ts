@@ -10,7 +10,7 @@ import {
   addChatMessage,
   deleteMatch,
 } from "../matchDatabase";
-import { getUserById } from "../database";
+import { getUserById, updateUser } from "../database";
 import {
   CreateMatchRequest,
   JoinMatchRequest,
@@ -146,7 +146,7 @@ export const uploadResults: RequestHandler[] = [
         // Определяем, выиграл ли игрок
         const playerWon = teamA.includes(playerId) ? teamAWon : teamBWon;
 
-        // Обновляем статистику
+        // Обно��ляем статистику
         const newRating = playerWon ? user.rating + 30 : user.rating - 20;
         const newKills = kills;
         const newDeaths = deaths;
