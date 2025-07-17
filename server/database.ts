@@ -291,3 +291,48 @@ export function userToProfile(user: User): UserProfile {
   const { password, ...profile } = user;
   return profile;
 }
+
+// Функция для расчета K/D ratio
+export function calculateKD(kills: number, deaths: number): number {
+  if (deaths === 0) {
+    return kills; // Если смертей нет, KD равен количеству убийств
+  }
+  return Math.round((kills / deaths) * 100) / 100; // Округляем до 2 знаков
+}
+
+// Функция для обновления статистики игрока после матча
+export function updateUserStats(
+  userId: string,
+  kills: number,
+  deaths: number,
+  won: boolean,
+): User | null {
+  const db = initDatabase();
+  const userIndex = db.users.findIndex((user) => user.id === userId);
+
+  if (userIndex === -1) {
+    return null;
+  }
+
+  const user = db.users[userIndex];
+
+  // Обновляем статистику
+  user.kills += kills;
+  user.deaths += deaths;
+  user.totalMatches += 1;
+
+  if (won) {
+    user.wins += 1;
+  } else {
+    user.losses += 1;
+  }
+
+  // Пересчитываем K/D
+  user.kd = calculateKD(user.kills, user.deaths);
+
+  // Обновляем последний вход
+  user.lastLogin = new Date().toISOString();
+
+  saveDatabase(db);
+  return user;
+}
