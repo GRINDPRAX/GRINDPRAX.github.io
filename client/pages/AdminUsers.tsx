@@ -201,6 +201,8 @@ export default function AdminUsers() {
 
   const getStatusBadgeVariant = (status: string) => {
     switch (status) {
+      case "Супер Администратор":
+        return "destructive";
       case "Администратор":
         return "destructive";
       case "Чемпион":
@@ -308,7 +310,7 @@ export default function AdminUsers() {
 
             <Card className="p-4 text-center">
               <div className="text-2xl font-bold text-primary">
-                {users.filter((u) => u.status === "Админис��ратор").length}
+                {users.filter((u) => u.status === "Администратор").length}
               </div>
               <div className="text-sm text-muted-foreground">
                 Администраторов
