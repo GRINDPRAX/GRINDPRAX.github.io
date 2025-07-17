@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import Statistics from "./pages/Statistics";
+import Top from "./pages/Top";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
