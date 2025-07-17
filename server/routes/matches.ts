@@ -104,43 +104,38 @@ export const leaveMatchHandler: RequestHandler = (req, res) => {
 };
 
 // Загрузить результаты матча (только для админов)
-export const uploadResults: RequestHandler = (req, res) => {
-  const { matchId } = req.params;
-  const { screenshot, teamAScore, teamBScore, teamA, teamB } =
-    req.body as UploadResultsRequest;
-  const adminId = req.headers.authorization?.replace("Bearer ", "");
+export const uploadResults: RequestHandler[] = [
+  requireAuth,
+  requireAdmin,
+  (req, res) => {
+    const { matchId } = req.params;
+    const { screenshot, teamAScore, teamBScore, teamA, teamB } =
+      req.body as UploadResultsRequest;
+    const adminId = (req as any).userId;
 
-  if (!adminId) {
-    return res.status(401).json({ error: "Authorization required" });
-  }
+    const match = getMatchById(matchId);
+    if (!match) {
+      return res.status(404).json({ error: "Match not found" });
+    }
 
-  const admin = getUserById(adminId);
-  if (!admin || admin.status !== "Администратор") {
-    return res.status(403).json({ error: "Admin access required" });
-  }
+    try {
+      const results = {
+        screenshot,
+        teamAScore,
+        teamBScore,
+        teamA,
+        teamB,
+        uploadedBy: adminId,
+        uploadedAt: new Date().toISOString(),
+      };
 
-  const match = getMatchById(matchId);
-  if (!match) {
-    return res.status(404).json({ error: "Match not found" });
-  }
-
-  try {
-    const results = {
-      screenshot,
-      teamAScore,
-      teamBScore,
-      teamA,
-      teamB,
-      uploadedBy: adminId,
-      uploadedAt: new Date().toISOString(),
-    };
-
-    const updatedMatch = uploadMatchResults(matchId, results);
-    res.json(updatedMatch);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to upload results" });
-  }
-};
+      const updatedMatch = uploadMatchResults(matchId, results);
+      res.json(updatedMatch);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to upload results" });
+    }
+  },
+];
 
 // Получить сообщения чата матча
 export const getMatchChat: RequestHandler = (req, res) => {
