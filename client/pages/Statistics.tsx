@@ -189,29 +189,31 @@ export default function Statistics() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <Card className="p-4 bg-card border-border/50 rounded-xl text-center">
                     <div className="text-2xl font-bold text-primary mb-1">
-                      0
+                      {user?.wins || 0}
+                    </div>
+                    <div className="text-xs text-muted-foreground">Победы</div>
+                  </Card>
+                  <Card className="p-4 bg-card border-border/50 rounded-xl text-center">
+                    <div className="text-2xl font-bold text-primary mb-1">
+                      {user?.losses || 0}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      Убийства
+                      Поражения
                     </div>
                   </Card>
                   <Card className="p-4 bg-card border-border/50 rounded-xl text-center">
                     <div className="text-2xl font-bold text-primary mb-1">
-                      0
+                      {user?.totalMatches || 0}
                     </div>
-                    <div className="text-xs text-muted-foreground">Смерти</div>
+                    <div className="text-xs text-muted-foreground">
+                      Всего игр
+                    </div>
                   </Card>
                   <Card className="p-4 bg-card border-border/50 rounded-xl text-center">
                     <div className="text-2xl font-bold text-primary mb-1">
-                      0
+                      {user?.kd.toFixed(2) || "0.00"}
                     </div>
-                    <div className="text-xs text-muted-foreground">Очки</div>
-                  </Card>
-                  <Card className="p-4 bg-card border-border/50 rounded-xl text-center">
-                    <div className="text-2xl font-bold text-primary mb-1">
-                      0
-                    </div>
-                    <div className="text-xs text-muted-foreground">Опыт</div>
+                    <div className="text-xs text-muted-foreground">K/D</div>
                   </Card>
                 </div>
               </div>
