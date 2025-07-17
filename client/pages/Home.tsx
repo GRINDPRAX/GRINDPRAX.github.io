@@ -100,6 +100,7 @@ const activeMatches: LocalMatch[] = [
 export default function Home() {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [gameMatches, setGameMatches] = useState<GameMatch[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
