@@ -45,7 +45,7 @@ export default function Admin() {
         }
 
         const userObj = JSON.parse(userData);
-        if (userObj.status !== "Администратор") {
+        if (userObj.status == "Администратор") {
           navigate("/");
           return;
         }
