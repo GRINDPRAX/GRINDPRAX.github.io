@@ -72,5 +72,12 @@ export function createServer() {
   app.get("/api/matches/:matchId/chat", getMatchChat);
   app.post("/api/matches/:matchId/chat", sendChatMessage);
 
+  // User management routes (admin only)
+  app.get("/api/admin/users", getAllUsersHandler);
+  app.get("/api/admin/users/:userId", getUserByIdHandler);
+  app.put("/api/admin/users/:userId", updateUserHandler);
+  app.delete("/api/admin/users/:userId", deleteUserHandler);
+  app.post("/api/admin/users/:userId/toggle-admin", toggleAdminStatus);
+
   return app;
 }
