@@ -85,13 +85,22 @@ export const deleteUserHandler: RequestHandler[] = [
   },
 ];
 
-// Выдать/убрать админские права (только для админов)
+// Выдать/убрать админские права (только для супер-админов)
 export const toggleAdminStatus: RequestHandler[] = [
   requireAuth,
   requireAdmin,
   (req, res) => {
     const { userId } = req.params;
     const { makeAdmin } = req.body; // boolean
+    const adminId = (req as any).userId;
+
+    // Проверяем, что текущий пользователь - супер админ
+    const currentAdmin = getUserById(adminId);
+    if (!currentAdmin || currentAdmin.status !== "Супер Администратор") {
+      return res
+        .status(403)
+        .json({ error: "Only super administrators can grant admin rights" });
+    }
 
     const targetUser = getUserById(userId);
     if (!targetUser) {
