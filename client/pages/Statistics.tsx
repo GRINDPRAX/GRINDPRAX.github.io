@@ -61,6 +61,7 @@ export default function Statistics() {
                   variant="ghost"
                   size="sm"
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+                  onClick={() => navigate("/top")}
                 >
                   ⚡ Топ
                 </Button>
