@@ -60,35 +60,30 @@ export const updateUserHandler: RequestHandler[] = [
 ];
 
 // Удалить пользователя (только для админов)
-export const deleteUserHandler: RequestHandler = (req, res) => {
-  const { userId } = req.params;
-  const adminId = req.headers.authorization?.replace("Bearer ", "");
+export const deleteUserHandler: RequestHandler[] = [
+  requireAuth,
+  requireAdmin,
+  (req, res) => {
+    const { userId } = req.params;
+    const adminId = (req as any).userId;
 
-  if (!adminId) {
-    return res.status(401).json({ error: "Authorization required" });
-  }
-
-  const admin = getUserById(adminId);
-  if (!admin || admin.status !== "Администратор") {
-    return res.status(403).json({ error: "Admin access required" });
-  }
-
-  // Проверяем, что админ не удаляет сам себя
-  if (userId === adminId) {
-    return res.status(400).json({ error: "Cannot delete yourself" });
-  }
-
-  try {
-    const success = deleteUser(userId);
-    if (!success) {
-      return res.status(404).json({ error: "User not found" });
+    // Проверяем, что админ не удаляет сам себя
+    if (userId === adminId) {
+      return res.status(400).json({ error: "Cannot delete yourself" });
     }
 
-    res.json({ success: true });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to delete user" });
-  }
-};
+    try {
+      const success = deleteUser(userId);
+      if (!success) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete user" });
+    }
+  },
+];
 
 // Выдать/убрать админские права (только для админов)
 export const toggleAdminStatus: RequestHandler = (req, res) => {
