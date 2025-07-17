@@ -302,16 +302,6 @@ export default function Auth() {
             </form>
           )}
 
-          {/* Demo Account */}
-          <div className="mt-6 pt-6 border-t border-border/50">
-            <p className="text-xs text-foreground/60 text-center mb-3">
-              Для тестирования:
-            </p>
-            <div className="text-xs text-foreground/80 text-center space-y-1">
-              <p>Email: demo@example.com</p>
-              <p>Пароль: demo123</p>
-            </div>
-          </div>
         </Card>
 
         {/* Back to Home */}
