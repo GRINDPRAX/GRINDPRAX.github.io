@@ -78,11 +78,14 @@ export default function Admin() {
 
     setCreating(true);
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       const response = await fetch("/api/matches", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.id}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: matchName,
@@ -111,10 +114,13 @@ export default function Admin() {
     if (!user) return;
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       const response = await fetch(`/api/matches/${matchId}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${user.id}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -154,11 +160,14 @@ export default function Admin() {
       const teamA = match.currentPlayers.slice(0, match.teamSize);
       const teamB = match.currentPlayers.slice(match.teamSize);
 
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       const response = await fetch(`/api/matches/${selectedMatch}/results`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.id}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           screenshot,
@@ -341,7 +350,7 @@ export default function Admin() {
                     onValueChange={setSelectedMatch}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Выберите матч" />
+                      <SelectValue placeholder="Вы��ерите матч" />
                     </SelectTrigger>
                     <SelectContent>
                       {matches
@@ -446,7 +455,7 @@ export default function Admin() {
                           ? "Ожидание"
                           : match.status === "in_progress"
                             ? "В игре"
-                            : "Заве��шен"}
+                            : "Завершен"}
                       </Badge>
                     </div>
 
