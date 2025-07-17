@@ -16,7 +16,7 @@ interface Banner {
   gradient: string;
 }
 
-interface Match {
+interface LocalMatch {
   id: number;
   team1: string;
   team2: string;
