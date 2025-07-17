@@ -1,0 +1,230 @@
+import { RequestHandler } from "express";
+import {
+  LoginRequest,
+  RegisterRequest,
+  AuthResponse,
+  UpdateProfileRequest,
+} from "@shared/user";
+import {
+  getUserByEmail,
+  createUser,
+  updateUser,
+  getUserById,
+  userToProfile,
+} from "../database";
+
+// Простая система сессий (в реальном проекте использовать JWT)
+const sessions = new Map<string, string>(); // token -> userId
+
+function generateToken(): string {
+  return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+}
+
+export const login: RequestHandler = (req, res) => {
+  try {
+    const { email, password }: LoginRequest = req.body;
+
+    if (!email || !password) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Email и пароль обязательны",
+      };
+      return res.status(400).json(response);
+    }
+
+    const user = getUserByEmail(email);
+
+    if (!user || user.password !== password) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Неверный email или пароль",
+      };
+      return res.status(401).json(response);
+    }
+
+    // Обновляем время последнего входа
+    updateUser(user.id, { lastLogin: new Date().toISOString() });
+
+    const token = generateToken();
+    sessions.set(token, user.id);
+
+    const response: AuthResponse = {
+      success: true,
+      user: userToProfile(user),
+      token,
+    };
+
+    res.json(response);
+  } catch (error) {
+    const response: AuthResponse = {
+      success: false,
+      message: "Внутренняя ошибка сервера",
+    };
+    res.status(500).json(response);
+  }
+};
+
+export const register: RequestHandler = (req, res) => {
+  try {
+    const { email, nickname, password }: RegisterRequest = req.body;
+
+    if (!email || !nickname || !password) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Все поля обязательны",
+      };
+      return res.status(400).json(response);
+    }
+
+    if (password.length < 6) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Пароль должен содержать минимум 6 символов",
+      };
+      return res.status(400).json(response);
+    }
+
+    if (getUserByEmail(email)) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Пользователь с таким email уже существует",
+      };
+      return res.status(409).json(response);
+    }
+
+    const newUser = createUser({
+      email,
+      nickname,
+      password,
+      avatar: "",
+      rating: 1000,
+      kd: 0,
+      registrationDate: new Date().toISOString(),
+      status: "Новичок",
+      level: 1,
+      wins: 0,
+      losses: 0,
+      totalMatches: 0,
+      lastLogin: new Date().toISOString(),
+    });
+
+    const token = generateToken();
+    sessions.set(token, newUser.id);
+
+    const response: AuthResponse = {
+      success: true,
+      user: userToProfile(newUser),
+      token,
+    };
+
+    res.json(response);
+  } catch (error) {
+    const response: AuthResponse = {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Внутренняя ошибка сервера",
+    };
+    res.status(500).json(response);
+  }
+};
+
+export const getProfile: RequestHandler = (req, res) => {
+  try {
+    const token = req.headers.authorization?.replace("Bearer ", "");
+
+    if (!token || !sessions.has(token)) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Токен недействителен",
+      };
+      return res.status(401).json(response);
+    }
+
+    const userId = sessions.get(token)!;
+    const user = getUserById(userId);
+
+    if (!user) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Пользователь не найден",
+      };
+      return res.status(404).json(response);
+    }
+
+    const response: AuthResponse = {
+      success: true,
+      user: userToProfile(user),
+    };
+
+    res.json(response);
+  } catch (error) {
+    const response: AuthResponse = {
+      success: false,
+      message: "Внутренняя ошибка сервера",
+    };
+    res.status(500).json(response);
+  }
+};
+
+export const updateProfile: RequestHandler = (req, res) => {
+  try {
+    const token = req.headers.authorization?.replace("Bearer ", "");
+
+    if (!token || !sessions.has(token)) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Токен недействителен",
+      };
+      return res.status(401).json(response);
+    }
+
+    const userId = sessions.get(token)!;
+    const updates: UpdateProfileRequest = req.body;
+
+    const updatedUser = updateUser(userId, updates);
+
+    if (!updatedUser) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Пользователь не найден",
+      };
+      return res.status(404).json(response);
+    }
+
+    const response: AuthResponse = {
+      success: true,
+      user: userToProfile(updatedUser),
+    };
+
+    res.json(response);
+  } catch (error) {
+    const response: AuthResponse = {
+      success: false,
+      message: "Внутренняя ошибка сервера",
+    };
+    res.status(500).json(response);
+  }
+};
+
+export const logout: RequestHandler = (req, res) => {
+  try {
+    const token = req.headers.authorization?.replace("Bearer ", "");
+
+    if (token && sessions.has(token)) {
+      sessions.delete(token);
+    }
+
+    const response: AuthResponse = {
+      success: true,
+      message: "Выход выполнен успешно",
+    };
+
+    res.json(response);
+  } catch (error) {
+    const response: AuthResponse = {
+      success: false,
+      message: "Внутренняя ошибка сервера",
+    };
+    res.status(500).json(response);
+  }
+};
