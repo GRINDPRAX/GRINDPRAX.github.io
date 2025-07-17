@@ -482,7 +482,9 @@ export default function AdminUsers() {
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            level: parseInt(e.target.value),
+                            level: isNaN(parseInt(e.target.value))
+                              ? 1
+                              : parseInt(e.target.value),
                           })
                         }
                       />
