@@ -119,7 +119,7 @@ export const register: RequestHandler = (req, res) => {
     const response: AuthResponse = {
       success: false,
       message:
-        error instanceof Error ? error.message : "Внутренняя ошибка с��рвера",
+        error instanceof Error ? error.message : "Внутренняя ошибка сервера",
     };
     res.status(500).json(response);
   }
@@ -223,8 +223,8 @@ export const logout: RequestHandler = (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
-    if (token && sessions.has(token)) {
-      sessions.delete(token);
+    if (token && hasSession(token)) {
+      deleteSession(token);
     }
 
     const response: AuthResponse = {
