@@ -12,6 +12,8 @@ import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import Statistics from "./pages/Statistics";
 import Top from "./pages/Top";
+import Lobby from "./pages/Lobby";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
