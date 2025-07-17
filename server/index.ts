@@ -24,5 +24,12 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
+  // Authentication routes
+  app.post("/api/auth/login", login);
+  app.post("/api/auth/register", register);
+  app.get("/api/auth/profile", getProfile);
+  app.put("/api/auth/profile", updateProfile);
+  app.post("/api/auth/logout", logout);
+
   return app;
 }
