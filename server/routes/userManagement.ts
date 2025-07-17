@@ -7,25 +7,18 @@ import {
   userToProfile,
 } from "../database";
 import { UpdateProfileRequest } from "@shared/user";
+import { requireAuth, requireAdmin } from "../middleware";
 
 // Получить всех пользователей (только для админов)
-export const getAllUsersHandler: RequestHandler = (req, res) => {
-  const adminId = req.headers.authorization?.replace("Bearer ", "");
-
-  if (!adminId) {
-    return res.status(401).json({ error: "Authorization required" });
-  }
-
-  const admin = getUserById(adminId);
-  if (!admin || admin.status !== "Администратор") {
-    return res.status(403).json({ error: "Admin access required" });
-  }
-
-  const users = getAllUsers();
-  const profiles = users.map(userToProfile);
-
-  res.json(profiles);
-};
+export const getAllUsersHandler: RequestHandler[] = [
+  requireAuth,
+  requireAdmin,
+  (req, res) => {
+    const users = getAllUsers();
+    const profiles = users.map(userToProfile);
+    res.json(profiles);
+  },
+];
 
 // Получить пользователя по ID (только для админов)
 export const getUserByIdHandler: RequestHandler = (req, res) => {
