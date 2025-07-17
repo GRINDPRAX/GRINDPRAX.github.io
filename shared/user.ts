@@ -23,6 +23,8 @@ export interface UserProfile {
   nickname: string;
   avatar?: string;
   rating: number;
+  kills: number;
+  deaths: number;
   kd: number;
   registrationDate: string;
   status: string;
