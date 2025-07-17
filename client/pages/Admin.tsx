@@ -422,6 +422,70 @@ export default function Admin() {
                   </div>
                 </div>
 
+                {/* Статистика игроков */}
+                {selectedMatch && playerStats.length > 0 && (
+                  <div>
+                    <Label>Статистика игроков</Label>
+                    <div className="mt-2 space-y-2 max-h-40 overflow-y-auto border rounded p-2">
+                      {playerStats.map((stat) => {
+                        const match = matches.find(
+                          (m) => m.id === selectedMatch,
+                        );
+                        const user = matches
+                          .find((m) => m.id === selectedMatch)
+                          ?.currentPlayers.find(
+                            (playerId) => playerId === stat.userId,
+                          );
+                        // Получаем никнейм игрока (в реальном приложении это нужно загружать с сервера)
+                        const playerNickname = `Игрок ${stat.userId.slice(0, 6)}`;
+
+                        return (
+                          <div
+                            key={stat.userId}
+                            className="grid grid-cols-3 gap-2 items-center"
+                          >
+                            <span className="text-sm font-medium">
+                              {playerNickname}
+                            </span>
+                            <div>
+                              <Label className="text-xs">Убийства</Label>
+                              <Input
+                                type="number"
+                                value={stat.kills}
+                                onChange={(e) =>
+                                  updatePlayerStat(
+                                    stat.userId,
+                                    "kills",
+                                    parseInt(e.target.value) || 0,
+                                  )
+                                }
+                                min="0"
+                                className="h-8"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-xs">Смерти</Label>
+                              <Input
+                                type="number"
+                                value={stat.deaths}
+                                onChange={(e) =>
+                                  updatePlayerStat(
+                                    stat.userId,
+                                    "deaths",
+                                    parseInt(e.target.value) || 0,
+                                  )
+                                }
+                                min="0"
+                                className="h-8"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <Label htmlFor="screenshot">Скриншот результатов</Label>
                   <Input
