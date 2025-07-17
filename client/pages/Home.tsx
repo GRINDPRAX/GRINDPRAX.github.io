@@ -398,8 +398,37 @@ export default function Home() {
                     variant="outline"
                     size="sm"
                     className="w-full mt-3"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
+
+                      if (!user) {
+                        navigate("/auth");
+                        return;
+                      }
+
+                      if (match.currentPlayers.length >= match.maxPlayers) {
+                        return;
+                      }
+
+                      // Join match
+                      try {
+                        const response = await fetch("/api/matches/join", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            matchId: match.id,
+                            userId: user.id,
+                          }),
+                        });
+
+                        if (response.ok) {
+                          navigate(`/lobby/${match.id}`);
+                        }
+                      } catch (err) {
+                        console.error("Error joining match:", err);
+                      }
                     }}
                   >
                     {user
