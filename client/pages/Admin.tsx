@@ -45,7 +45,7 @@ export default function Admin() {
         }
 
         const userObj = JSON.parse(userData);
-        if (userObj.status == "Администратор") {
+        if (userObj.status !== "Администратор") {
           navigate("/");
           return;
         }
@@ -446,7 +446,7 @@ export default function Admin() {
                           ? "Ожидание"
                           : match.status === "in_progress"
                             ? "В игре"
-                            : "Завершен"}
+                            : "Заве��шен"}
                       </Badge>
                     </div>
 
