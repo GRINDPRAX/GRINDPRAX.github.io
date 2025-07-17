@@ -55,20 +55,24 @@ export default function Statistics() {
 
             {/* Right side */}
             <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                onClick={() => navigate("/profile")}
-              >
-                ⚙️ Настройки
-              </Button>
-              <Badge
-                variant="secondary"
-                className="bg-primary text-primary-foreground rounded-md px-2 py-1"
-              >
-                FI
-              </Badge>
+              {user ? (
+                <Badge
+                  variant="secondary"
+                  className="bg-primary text-primary-foreground rounded-md px-2 py-1 cursor-pointer hover:bg-primary/90 transition-colors"
+                  onClick={() => navigate("/profile")}
+                >
+                  {user.nickname.slice(0, 2).toUpperCase()}
+                </Badge>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/auth")}
+                  className="text-foreground hover:bg-muted/50"
+                >
+                  Войти
+                </Button>
+              )}
             </div>
           </div>
         </div>
