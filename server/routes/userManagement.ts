@@ -21,27 +21,21 @@ export const getAllUsersHandler: RequestHandler[] = [
 ];
 
 // Получить пользователя по ID (только для админов)
-export const getUserByIdHandler: RequestHandler = (req, res) => {
-  const { userId } = req.params;
-  const adminId = req.headers.authorization?.replace("Bearer ", "");
+export const getUserByIdHandler: RequestHandler[] = [
+  requireAuth,
+  requireAdmin,
+  (req, res) => {
+    const { userId } = req.params;
 
-  if (!adminId) {
-    return res.status(401).json({ error: "Authorization required" });
-  }
+    const user = getUserById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
-  const admin = getUserById(adminId);
-  if (!admin || admin.status !== "Администратор") {
-    return res.status(403).json({ error: "Admin access required" });
-  }
-
-  const user = getUserById(userId);
-  if (!user) {
-    return res.status(404).json({ error: "User not found" });
-  }
-
-  const profile = userToProfile(user);
-  res.json(profile);
-};
+    const profile = userToProfile(user);
+    res.json(profile);
+  },
+];
 
 // Обновить пользователя (только для админов)
 export const updateUserHandler: RequestHandler = (req, res) => {
