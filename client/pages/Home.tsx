@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Clock, Users, Trophy } from "lucide-react";
 import { UserProfile } from "@shared/user";
+import { Match as GameMatch } from "@shared/match";
 
 interface Banner {
   id: number;
@@ -15,7 +16,7 @@ interface Banner {
   gradient: string;
 }
 
-interface Match {
+interface LocalMatch {
   id: number;
   team1: string;
   team2: string;
@@ -53,7 +54,7 @@ const banners: Banner[] = [
   },
 ];
 
-const activeMatches: Match[] = [
+const activeMatches: LocalMatch[] = [
   {
     id: 1,
     team1: "Team Alpha",
@@ -99,19 +100,41 @@ const activeMatches: Match[] = [
 export default function Home() {
   const [currentBanner, setCurrentBanner] = useState(0);
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [gameMatches, setGameMatches] = useState<GameMatch[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is logged in
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      try {
-        setUser(JSON.parse(userData));
-      } catch (err) {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
+    const loadData = async () => {
+      // Check if user is logged in
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        try {
+          setUser(JSON.parse(userData));
+        } catch (err) {
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+        }
       }
-    }
+
+      // Load active matches
+      try {
+        const response = await fetch("/api/matches");
+        if (response.ok) {
+          const matches = await response.json();
+          setGameMatches(
+            matches.filter((match: GameMatch) => match.status === "waiting"),
+          );
+        }
+      } catch (err) {
+        console.error("Error loading matches:", err);
+      }
+    };
+
+    loadData();
+
+    // Poll for match updates every 10 seconds
+    const interval = setInterval(loadData, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   // Auto-scroll banners every 5 seconds
@@ -134,7 +157,7 @@ export default function Home() {
     window.open(link, "_blank");
   };
 
-  const getStatusColor = (status: Match["status"]) => {
+  const getStatusColor = (status: LocalMatch["status"]) => {
     switch (status) {
       case "live":
         return "bg-red-500 text-white";
@@ -147,7 +170,7 @@ export default function Home() {
     }
   };
 
-  const getStatusText = (status: Match["status"]) => {
+  const getStatusText = (status: LocalMatch["status"]) => {
     switch (status) {
       case "live":
         return "В эфире";
@@ -180,6 +203,7 @@ export default function Home() {
                   variant="ghost"
                   size="sm"
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+                  onClick={() => navigate("/top")}
                 >
                   ⚡ Топ
                 </Button>
@@ -194,17 +218,20 @@ export default function Home() {
                   variant="ghost"
                   size="sm"
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+                  onClick={() => navigate("/statistics")}
                 >
                   📊 Статистика
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/statistics")}
-                >
-                  🛡️ Администрация
-                </Button>
+                {user?.status === "Администратор" && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+                    onClick={() => navigate("/admin")}
+                  >
+                    🛡️ Администрация
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -306,62 +333,91 @@ export default function Home() {
         {/* Active Matches */}
         <div>
           <h2 className="text-2xl font-semibold text-foreground mb-4">
-            Активные матчи
+            🎮 Доступные матчи
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
-            {activeMatches.map((match) => (
-              <Card
-                key={match.id}
-                className="p-4 bg-card border-border/50 rounded-xl hover:bg-muted/30 transition-colors cursor-pointer"
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <Badge
-                    className={`text-xs px-2 py-1 rounded-full ${getStatusColor(match.status)}`}
-                  >
-                    {getStatusText(match.status)}
-                  </Badge>
-                  {match.viewers && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {gameMatches.length > 0 ? (
+              gameMatches.map((match) => (
+                <Card
+                  key={match.id}
+                  className="p-4 bg-card border-border/50 rounded-xl hover:bg-muted/30 transition-colors cursor-pointer"
+                  onClick={async () => {
+                    if (!user) {
+                      navigate("/auth");
+                      return;
+                    }
+
+                    // Join match
+                    try {
+                      const response = await fetch("/api/matches/join", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          matchId: match.id,
+                          userId: user.id,
+                        }),
+                      });
+
+                      if (response.ok) {
+                        navigate(`/lobby/${match.id}`);
+                      }
+                    } catch (err) {
+                      console.error("Error joining match:", err);
+                    }
+                  }}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <Badge className="text-xs px-2 py-1 rounded-full bg-green-500 text-white">
+                      Ожидание игроков
+                    </Badge>
                     <div className="flex items-center text-xs text-foreground/60">
                       <Users className="h-3 w-3 mr-1" />
-                      {match.viewers.toLocaleString()}
+                      {match.currentPlayers.length}/{match.maxPlayers}
                     </div>
-                  )}
-                </div>
+                  </div>
 
-                <div className="space-y-2 mb-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-sm">{match.team1}</span>
-                    <span className="font-bold text-lg">{match.score1}</span>
+                  <div className="space-y-2 mb-3">
+                    <div className="font-semibold text-lg text-center text-primary">
+                      {match.name}
+                    </div>
+                    <div className="text-sm text-center text-muted-foreground">
+                      {match.teamSize}v{match.teamSize}
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-sm">{match.team2}</span>
-                    <span className="font-bold text-lg">{match.score2}</span>
-                  </div>
-                </div>
 
-                <div className="flex items-center justify-between text-xs text-foreground/60">
-                  <div className="flex items-center">
-                    {match.status === "live" ? (
-                      <>
-                        <div className="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></div>
-                        <Clock className="h-3 w-3 mr-1" />
-                        {match.time}
-                      </>
-                    ) : match.status === "upcoming" ? (
-                      <>
-                        <Clock className="h-3 w-3 mr-1" />
-                        {match.time}
-                      </>
-                    ) : (
-                      <>
-                        <Trophy className="h-3 w-3 mr-1" />
-                        {match.time}
-                      </>
-                    )}
+                  <div className="text-xs text-center text-foreground/60">
+                    <div className="flex items-center justify-center">
+                      <Clock className="h-3 w-3 mr-1" />
+                      Создан {new Date(match.createdAt).toLocaleTimeString()}
+                    </div>
                   </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full mt-3"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    {user
+                      ? match.currentPlayers.length >= match.maxPlayers
+                        ? "Матч полный"
+                        : "Присоединиться"
+                      : "Войти для участия"}
+                  </Button>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-8 text-muted-foreground">
+                <div className="text-lg mb-2">🎯 Нет доступных матчей</div>
+                <div className="text-sm">
+                  Администраторы могут создавать новые матчи
                 </div>
-              </Card>
-            ))}
+              </div>
+            )}
           </div>
         </div>
       </main>

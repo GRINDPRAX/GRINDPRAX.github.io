@@ -8,6 +8,29 @@ import {
   updateProfile,
   logout,
 } from "./routes/auth";
+import {
+  getUserStatistics,
+  getTopPlayers,
+  getAllPlayersStatistics,
+} from "./routes/statistics";
+import {
+  getMatches,
+  getMatch,
+  createNewMatch,
+  joinMatchHandler,
+  leaveMatchHandler,
+  uploadResults,
+  getMatchChat,
+  sendChatMessage,
+  deleteMatchHandler,
+} from "./routes/matches";
+import {
+  getAllUsersHandler,
+  getUserByIdHandler,
+  updateUserHandler,
+  deleteUserHandler,
+  toggleAdminStatus,
+} from "./routes/userManagement";
 
 export function createServer() {
   const app = express();
@@ -30,6 +53,31 @@ export function createServer() {
   app.get("/api/auth/profile", getProfile);
   app.put("/api/auth/profile", updateProfile);
   app.post("/api/auth/logout", logout);
+
+  // Statistics routes
+  app.get("/api/statistics/user/:userId", getUserStatistics);
+  app.get("/api/statistics/top", getTopPlayers);
+  app.get("/api/statistics/all", getAllPlayersStatistics);
+
+  // Match routes
+  app.get("/api/matches", getMatches);
+  app.get("/api/matches/:matchId", getMatch);
+  app.post("/api/matches", createNewMatch);
+  app.post("/api/matches/join", joinMatchHandler);
+  app.post("/api/matches/:matchId/leave", leaveMatchHandler);
+  app.post("/api/matches/:matchId/results", uploadResults);
+  app.delete("/api/matches/:matchId", deleteMatchHandler);
+
+  // Chat routes
+  app.get("/api/matches/:matchId/chat", getMatchChat);
+  app.post("/api/matches/:matchId/chat", sendChatMessage);
+
+  // User management routes (admin only)
+  app.get("/api/admin/users", getAllUsersHandler);
+  app.get("/api/admin/users/:userId", getUserByIdHandler);
+  app.put("/api/admin/users/:userId", updateUserHandler);
+  app.delete("/api/admin/users/:userId", deleteUserHandler);
+  app.post("/api/admin/users/:userId/toggle-admin", toggleAdminStatus);
 
   return app;
 }
