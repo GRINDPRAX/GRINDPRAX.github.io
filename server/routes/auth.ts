@@ -12,13 +12,12 @@ import {
   getUserById,
   userToProfile,
 } from "../database";
-
-// Простая система сессий (в реальном проекте использовать JWT)
-const sessions = new Map<string, string>(); // token -> userId
-
-function generateToken(): string {
-  return Date.now().toString() + Math.random().toString(36).substr(2, 9);
-}
+import {
+  createSession,
+  getSessionUserId,
+  deleteSession,
+  hasSession,
+} from "../middleware";
 
 export const login: RequestHandler = (req, res) => {
   try {
@@ -45,8 +44,7 @@ export const login: RequestHandler = (req, res) => {
     // Обновляем время последнего входа
     updateUser(user.id, { lastLogin: new Date().toISOString() });
 
-    const token = generateToken();
-    sessions.set(token, user.id);
+    const token = createSession(user.id);
 
     const response: AuthResponse = {
       success: true,
@@ -108,8 +106,7 @@ export const register: RequestHandler = (req, res) => {
       lastLogin: new Date().toISOString(),
     });
 
-    const token = generateToken();
-    sessions.set(token, newUser.id);
+    const token = createSession(newUser.id);
 
     const response: AuthResponse = {
       success: true,
@@ -132,7 +129,7 @@ export const getProfile: RequestHandler = (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
-    if (!token || !sessions.has(token)) {
+    if (!token || !hasSession(token)) {
       const response: AuthResponse = {
         success: false,
         message: "Токен недействителен",
@@ -140,7 +137,15 @@ export const getProfile: RequestHandler = (req, res) => {
       return res.status(401).json(response);
     }
 
-    const userId = sessions.get(token)!;
+    const userId = getSessionUserId(token);
+    if (!userId) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Токен недействителен",
+      };
+      return res.status(401).json(response);
+    }
+
     const user = getUserById(userId);
 
     if (!user) {
@@ -170,7 +175,7 @@ export const updateProfile: RequestHandler = (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
-    if (!token || !sessions.has(token)) {
+    if (!token || !hasSession(token)) {
       const response: AuthResponse = {
         success: false,
         message: "Токен недействителен",
@@ -178,7 +183,15 @@ export const updateProfile: RequestHandler = (req, res) => {
       return res.status(401).json(response);
     }
 
-    const userId = sessions.get(token)!;
+    const userId = getSessionUserId(token);
+    if (!userId) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Токен недействителен",
+      };
+      return res.status(401).json(response);
+    }
+
     const updates: UpdateProfileRequest = req.body;
 
     const updatedUser = updateUser(userId, updates);
@@ -210,8 +223,8 @@ export const logout: RequestHandler = (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
-    if (token && sessions.has(token)) {
-      sessions.delete(token);
+    if (token && hasSession(token)) {
+      deleteSession(token);
     }
 
     const response: AuthResponse = {

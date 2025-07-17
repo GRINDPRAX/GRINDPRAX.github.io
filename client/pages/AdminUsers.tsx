@@ -66,9 +66,15 @@ export default function AdminUsers() {
         setUser(userObj);
 
         // Load all users
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/auth");
+          return;
+        }
+
         const usersResponse = await fetch("/api/admin/users", {
           headers: {
-            Authorization: `Bearer ${userObj.id}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -123,11 +129,14 @@ export default function AdminUsers() {
     if (!selectedUser || !user) return;
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       const response = await fetch(`/api/admin/users/${selectedUser.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.id}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(editForm),
       });
@@ -147,10 +156,13 @@ export default function AdminUsers() {
       return;
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       const response = await fetch(`/api/admin/users/${userId}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${user.id}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -166,11 +178,14 @@ export default function AdminUsers() {
     if (!user) return;
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       const response = await fetch(`/api/admin/users/${userId}/toggle-admin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.id}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ makeAdmin }),
       });
