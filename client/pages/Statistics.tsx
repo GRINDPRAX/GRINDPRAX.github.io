@@ -2,9 +2,25 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { UserProfile } from "@shared/user";
 
 export default function Statistics() {
   const navigate = useNavigate();
+  const [user, setUser] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (err) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+      }
+    }
+  }, []);
   return (
     <div className="dark min-h-screen bg-background text-foreground">
       {/* Top Navigation */}
