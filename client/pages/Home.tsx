@@ -157,7 +157,7 @@ export default function Home() {
     window.open(link, "_blank");
   };
 
-  const getStatusColor = (status: Match["status"]) => {
+  const getStatusColor = (status: LocalMatch["status"]) => {
     switch (status) {
       case "live":
         return "bg-red-500 text-white";
