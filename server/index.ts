@@ -36,5 +36,10 @@ export function createServer() {
   app.put("/api/auth/profile", updateProfile);
   app.post("/api/auth/logout", logout);
 
+  // Statistics routes
+  app.get("/api/statistics/user/:userId", getUserStatistics);
+  app.get("/api/statistics/top", getTopPlayers);
+  app.get("/api/statistics/all", getAllPlayersStatistics);
+
   return app;
 }
