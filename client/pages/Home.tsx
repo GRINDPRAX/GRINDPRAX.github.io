@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Clock, Users, Trophy } from "lucide-react";
 import { UserProfile } from "@shared/user";
+import { Match as GameMatch } from "@shared/match";
 
 interface Banner {
   id: number;
@@ -203,7 +204,6 @@ export default function Home() {
                   variant="ghost"
                   size="sm"
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  
                 >
                   🛡️ Администрация
                 </Button>
