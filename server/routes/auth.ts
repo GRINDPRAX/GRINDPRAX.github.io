@@ -119,7 +119,7 @@ export const register: RequestHandler = (req, res) => {
     const response: AuthResponse = {
       success: false,
       message:
-        error instanceof Error ? error.message : "Внутренняя ошибка сервера",
+        error instanceof Error ? error.message : "Внутренняя ошибка с��рвера",
     };
     res.status(500).json(response);
   }
@@ -175,7 +175,7 @@ export const updateProfile: RequestHandler = (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
-    if (!token || !sessions.has(token)) {
+    if (!token || !hasSession(token)) {
       const response: AuthResponse = {
         success: false,
         message: "Токен недействителен",
@@ -183,7 +183,15 @@ export const updateProfile: RequestHandler = (req, res) => {
       return res.status(401).json(response);
     }
 
-    const userId = sessions.get(token)!;
+    const userId = getSessionUserId(token);
+    if (!userId) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Токен недействителен",
+      };
+      return res.status(401).json(response);
+    }
+
     const updates: UpdateProfileRequest = req.body;
 
     const updatedUser = updateUser(userId, updates);
