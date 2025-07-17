@@ -13,6 +13,17 @@ import {
   getTopPlayers,
   getAllPlayersStatistics,
 } from "./routes/statistics";
+import {
+  getMatches,
+  getMatch,
+  createNewMatch,
+  joinMatchHandler,
+  leaveMatchHandler,
+  uploadResults,
+  getMatchChat,
+  sendChatMessage,
+  deleteMatchHandler,
+} from "./routes/matches";
 
 export function createServer() {
   const app = express();
