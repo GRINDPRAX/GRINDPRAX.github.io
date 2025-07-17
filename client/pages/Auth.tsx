@@ -174,7 +174,7 @@ export default function Auth() {
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Введите ��ароль"
+                    placeholder="Введите пароль"
                     value={loginForm.password}
                     onChange={(e) =>
                       setLoginForm({ ...loginForm, password: e.target.value })
