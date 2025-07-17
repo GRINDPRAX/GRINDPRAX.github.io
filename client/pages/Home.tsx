@@ -104,16 +104,37 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user is logged in
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      try {
-        setUser(JSON.parse(userData));
-      } catch (err) {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
+    const loadData = async () => {
+      // Check if user is logged in
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        try {
+          setUser(JSON.parse(userData));
+        } catch (err) {
+          localStorage.removeItem("user");
+          localStorage.removeItem("token");
+        }
       }
-    }
+
+      // Load active matches
+      try {
+        const response = await fetch("/api/matches");
+        if (response.ok) {
+          const matches = await response.json();
+          setGameMatches(
+            matches.filter((match: GameMatch) => match.status === "waiting"),
+          );
+        }
+      } catch (err) {
+        console.error("Error loading matches:", err);
+      }
+    };
+
+    loadData();
+
+    // Poll for match updates every 10 seconds
+    const interval = setInterval(loadData, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   // Auto-scroll banners every 5 seconds
