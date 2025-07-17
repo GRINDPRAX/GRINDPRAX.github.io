@@ -83,6 +83,7 @@ export default function Statistics() {
                   variant="ghost"
                   size="sm"
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+                  onClick={() => navigate("/admin")}
                 >
                   🛡️ Администрация
                 </Button>
@@ -186,7 +187,7 @@ export default function Statistics() {
                   <span className="text-lg font-semibold">📊 Статистика</span>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                   <Card className="p-4 bg-card border-border/50 rounded-xl text-center">
                     <div className="text-2xl font-bold text-primary mb-1">
                       {user?.wins || 0}
@@ -208,6 +209,20 @@ export default function Statistics() {
                     <div className="text-xs text-muted-foreground">
                       Всего игр
                     </div>
+                  </Card>
+                  <Card className="p-4 bg-card border-border/50 rounded-xl text-center">
+                    <div className="text-2xl font-bold text-green-400 mb-1">
+                      {user?.kills || 0}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Убийства
+                    </div>
+                  </Card>
+                  <Card className="p-4 bg-card border-border/50 rounded-xl text-center">
+                    <div className="text-2xl font-bold text-red-400 mb-1">
+                      {user?.deaths || 0}
+                    </div>
+                    <div className="text-xs text-muted-foreground">Смерти</div>
                   </Card>
                   <Card className="p-4 bg-card border-border/50 rounded-xl text-center">
                     <div className="text-2xl font-bold text-primary mb-1">
@@ -241,7 +256,7 @@ export default function Statistics() {
 
                   <Card className="p-4 bg-card border-border/50 rounded-xl">
                     <div className="flex items-center space-x-3">
-                      <div className="text-blue-400">📅</div>
+                      <div className="text-blue-400">���</div>
                       <div>
                         <div className="text-sm font-medium text-foreground">
                           {user?.registrationDate

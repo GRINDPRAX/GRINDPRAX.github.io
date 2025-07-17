@@ -20,6 +20,8 @@ function initDatabase(): Database {
           password: "demo123", // В реальном проекте должен быть хэширован
           avatar: "",
           rating: 1250,
+          kills: 189,
+          deaths: 140,
           kd: 1.35,
           registrationDate: "2024-01-15T10:30:00Z",
           status: "Администратор",
@@ -36,6 +38,8 @@ function initDatabase(): Database {
           password: "pro123",
           avatar: "",
           rating: 2100,
+          kills: 420,
+          deaths: 150,
           kd: 2.8,
           registrationDate: "2023-12-01T08:00:00Z",
           status: "Элитный игрок",
@@ -52,6 +56,8 @@ function initDatabase(): Database {
           password: "newbie123",
           avatar: "",
           rating: 800,
+          kills: 42,
+          deaths: 60,
           kd: 0.7,
           registrationDate: "2024-02-10T14:20:00Z",
           status: "Новичок",
@@ -68,6 +74,8 @@ function initDatabase(): Database {
           password: "veteran123",
           avatar: "",
           rating: 1800,
+          kills: 315,
+          deaths: 150,
           kd: 2.1,
           registrationDate: "2023-06-15T09:15:00Z",
           status: "Ветеран",
@@ -84,6 +92,8 @@ function initDatabase(): Database {
           password: "legend123",
           avatar: "",
           rating: 2500,
+          kills: 640,
+          deaths: 200,
           kd: 3.2,
           registrationDate: "2023-01-01T00:00:00Z",
           status: "Легенда",
@@ -100,6 +110,8 @@ function initDatabase(): Database {
           password: "casual123",
           avatar: "",
           rating: 1100,
+          kills: 99,
+          deaths: 90,
           kd: 1.1,
           registrationDate: "2024-01-20T16:45:00Z",
           status: "Игрок",
@@ -116,6 +128,8 @@ function initDatabase(): Database {
           password: "skilled123",
           avatar: "",
           rating: 1650,
+          kills: 247,
+          deaths: 130,
           kd: 1.9,
           registrationDate: "2023-11-05T12:30:00Z",
           status: "Опытный игрок",
@@ -132,6 +146,8 @@ function initDatabase(): Database {
           password: "expert123",
           avatar: "",
           rating: 1950,
+          kills: 360,
+          deaths: 150,
           kd: 2.4,
           registrationDate: "2023-08-12T07:20:00Z",
           status: "Эксперт",
@@ -148,6 +164,8 @@ function initDatabase(): Database {
           password: "rookie123",
           avatar: "",
           rating: 600,
+          kills: 25,
+          deaths: 50,
           kd: 0.5,
           registrationDate: "2024-02-25T18:10:00Z",
           status: "Новичок",
@@ -164,6 +182,8 @@ function initDatabase(): Database {
           password: "champion123",
           avatar: "",
           rating: 2800,
+          kills: 1025,
+          deaths: 250,
           kd: 4.1,
           registrationDate: "2022-12-01T10:00:00Z",
           status: "Чемпион",
@@ -180,6 +200,8 @@ function initDatabase(): Database {
           password: "admin123",
           avatar: "",
           rating: 9999,
+          kills: 9999,
+          deaths: 10,
           kd: 999.9,
           registrationDate: "2022-01-01T00:00:00Z",
           status: "Супер Администратор",
@@ -268,4 +290,49 @@ export function deleteUser(id: string): boolean {
 export function userToProfile(user: User): UserProfile {
   const { password, ...profile } = user;
   return profile;
+}
+
+// Функция для расчета K/D ratio
+export function calculateKD(kills: number, deaths: number): number {
+  if (deaths === 0) {
+    return kills; // Если смертей нет, KD равен количеству убийств
+  }
+  return Math.round((kills / deaths) * 100) / 100; // Округляем до 2 знаков
+}
+
+// Функция для обновления статистики игрока после матча
+export function updateUserStats(
+  userId: string,
+  kills: number,
+  deaths: number,
+  won: boolean,
+): User | null {
+  const db = initDatabase();
+  const userIndex = db.users.findIndex((user) => user.id === userId);
+
+  if (userIndex === -1) {
+    return null;
+  }
+
+  const user = db.users[userIndex];
+
+  // Обновляем статистику
+  user.kills += kills;
+  user.deaths += deaths;
+  user.totalMatches += 1;
+
+  if (won) {
+    user.wins += 1;
+  } else {
+    user.losses += 1;
+  }
+
+  // Пересчитываем K/D
+  user.kd = calculateKD(user.kills, user.deaths);
+
+  // Обновляем последний вход
+  user.lastLogin = new Date().toISOString();
+
+  saveDatabase(db);
+  return user;
 }
