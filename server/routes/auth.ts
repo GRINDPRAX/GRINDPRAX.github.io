@@ -44,8 +44,7 @@ export const login: RequestHandler = (req, res) => {
     // Обновляем время последнего входа
     updateUser(user.id, { lastLogin: new Date().toISOString() });
 
-    const token = generateToken();
-    sessions.set(token, user.id);
+    const token = createSession(user.id);
 
     const response: AuthResponse = {
       success: true,
@@ -172,7 +171,7 @@ export const updateProfile: RequestHandler = (req, res) => {
     if (!token || !sessions.has(token)) {
       const response: AuthResponse = {
         success: false,
-        message: "Токен недействител��н",
+        message: "Токен недействителен",
       };
       return res.status(401).json(response);
     }
@@ -199,7 +198,7 @@ export const updateProfile: RequestHandler = (req, res) => {
   } catch (error) {
     const response: AuthResponse = {
       success: false,
-      message: "Внутренняя ошибка сервера",
+      message: "Внутренняя ��шибка сервера",
     };
     res.status(500).json(response);
   }
