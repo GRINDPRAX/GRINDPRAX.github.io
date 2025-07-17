@@ -28,16 +28,16 @@ interface Match {
 const banners: Banner[] = [
   {
     id: 1,
-    title: "Чемпионат мира 2024",
-    description: "Самые захватывающие матчи сезона",
+    title: "Телеграм канал",
+    description: "Подпишитесь",
     imageUrl: "",
-    link: "/tournament/world-championship",
+    link: "t.me/BOPUEM",
     gradient: "from-orange-600 via-orange-500 to-orange-400",
   },
   {
     id: 2,
-    title: "Новые герои",
-    description: "Обновление игры с новыми возможностями",
+    title: "Лучший FACEIT по PROJECT EVOLTION",
+    description: "Реально лучший",
     imageUrl: "",
     link: "/updates/new-heroes",
     gradient: "from-blue-600 via-purple-500 to-pink-400",
