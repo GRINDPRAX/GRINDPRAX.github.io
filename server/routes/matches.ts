@@ -37,38 +37,33 @@ export const getMatch: RequestHandler = (req, res) => {
 };
 
 // Создать новый матч (только для админов)
-export const createNewMatch: RequestHandler = (req, res) => {
-  const { name, teamSize } = req.body as CreateMatchRequest;
-  const adminId = req.headers.authorization?.replace("Bearer ", "");
+export const createNewMatch: RequestHandler[] = [
+  requireAuth,
+  requireAdmin,
+  (req, res) => {
+    const { name, teamSize } = req.body as CreateMatchRequest;
+    const adminId = (req as any).userId;
 
-  if (!adminId) {
-    return res.status(401).json({ error: "Authorization required" });
-  }
+    if (!name || !teamSize || teamSize < 2 || teamSize > 5) {
+      return res.status(400).json({ error: "Invalid match parameters" });
+    }
 
-  const admin = getUserById(adminId);
-  if (!admin || admin.status !== "Администратор") {
-    return res.status(403).json({ error: "Admin access required" });
-  }
+    try {
+      const newMatch = createMatch({
+        name,
+        teamSize,
+        maxPlayers: teamSize * 2,
+        currentPlayers: [],
+        status: "waiting",
+        createdBy: adminId,
+      });
 
-  if (!name || !teamSize || teamSize < 2 || teamSize > 5) {
-    return res.status(400).json({ error: "Invalid match parameters" });
-  }
-
-  try {
-    const newMatch = createMatch({
-      name,
-      teamSize,
-      maxPlayers: teamSize * 2,
-      currentPlayers: [],
-      status: "waiting",
-      createdBy: adminId,
-    });
-
-    res.json(newMatch);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to create match" });
-  }
-};
+      res.json(newMatch);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create match" });
+    }
+  },
+];
 
 // Присоединиться к матчу
 export const joinMatchHandler: RequestHandler = (req, res) => {
