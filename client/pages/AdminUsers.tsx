@@ -364,27 +364,30 @@ export default function AdminUsers() {
                           Редактировать
                         </Button>
 
-                        {userItem.status !== "Администратор" ? (
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => handleToggleAdmin(userItem.id, true)}
-                          >
-                            Сдела��ь админом
-                          </Button>
-                        ) : (
-                          userItem.id !== user?.id && (
+                        {user?.status === "Супер Администратор" &&
+                          (userItem.status !== "Администратор" ? (
                             <Button
-                              variant="outline"
+                              variant="secondary"
                               size="sm"
                               onClick={() =>
-                                handleToggleAdmin(userItem.id, false)
+                                handleToggleAdmin(userItem.id, true)
                               }
                             >
-                              Убрать админа
+                              Сделать админом
                             </Button>
-                          )
-                        )}
+                          ) : (
+                            userItem.id !== user?.id && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  handleToggleAdmin(userItem.id, false)
+                                }
+                              >
+                                Убрать админа
+                              </Button>
+                            )
+                          ))}
 
                         {userItem.id !== user?.id && (
                           <Button
@@ -588,7 +591,7 @@ export default function AdminUsers() {
               >
                 Отмена
               </Button>
-              <Button onClick={handleSaveUser}>Сохранить изменения</Button>
+              <Button onClick={handleSaveUser}>Со��ранить изменения</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
