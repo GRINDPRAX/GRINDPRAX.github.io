@@ -5,7 +5,9 @@ export interface User {
   password: string; // В реальном проекте должен быть хэширован
   avatar?: string;
   rating: number;
-  kd: number; // Kill/Death ratio
+  kills: number; // Total kills
+  deaths: number; // Total deaths
+  kd: number; // Kill/Death ratio (calculated from kills/deaths)
   registrationDate: string;
   status: string;
   level: number;
