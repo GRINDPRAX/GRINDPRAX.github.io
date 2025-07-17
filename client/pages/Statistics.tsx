@@ -132,25 +132,41 @@ export default function Statistics() {
 
               {/* User Info */}
               <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-foreground mb-2">ТутНик</h3>
-                  <div className="text-sm text-muted-foreground space-y-1">
-                    <div className="flex items-center">
-                      <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-                      <span>#был онлайн только что</span>
+                {loading ? (
+                  <div className="text-center text-muted-foreground">
+                    Загрузка...
+                  </div>
+                ) : user ? (
+                  <>
+                    <div>
+                      <h3 className="font-semibold text-foreground mb-2">
+                        {user.nickname}
+                      </h3>
+                      <div className="text-sm text-muted-foreground space-y-1">
+                        <div className="flex items-center">
+                          <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                          <span>Рейтинг: {user.rating}</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                <div className="pt-4">
-                  <div className="text-sm text-muted-foreground mb-2">
-                    Статус
+                    <div className="pt-4">
+                      <div className="text-sm text-muted-foreground mb-2">
+                        Статус
+                      </div>
+                      <div className="flex items-center">
+                        <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                        <span className="text-sm">{user.status}</span>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center">
+                    <Button onClick={() => navigate("/auth")}>
+                      Войти в аккаунт
+                    </Button>
                   </div>
-                  <div className="flex items-center">
-                    <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
-                    <span className="text-sm">Игрок</span>
-                  </div>
-                </div>
+                )}
 
                 <div className="pt-4">
                   <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg">
