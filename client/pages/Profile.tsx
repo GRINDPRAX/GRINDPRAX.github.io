@@ -67,7 +67,6 @@ export default function Profile() {
 
       const updates: UpdateProfileRequest = {
         nickname: nickname !== user.nickname ? nickname : undefined,
-        status: status !== user.status ? status : undefined,
       };
 
       const response = await fetch("/api/auth/profile", {
