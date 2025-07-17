@@ -12,13 +12,12 @@ import {
   getUserById,
   userToProfile,
 } from "../database";
-
-// Простая система сессий (в реальном проекте использовать JWT)
-const sessions = new Map<string, string>(); // token -> userId
-
-function generateToken(): string {
-  return Date.now().toString() + Math.random().toString(36).substr(2, 9);
-}
+import {
+  createSession,
+  getSessionUserId,
+  deleteSession,
+  hasSession,
+} from "../middleware";
 
 export const login: RequestHandler = (req, res) => {
   try {
@@ -173,7 +172,7 @@ export const updateProfile: RequestHandler = (req, res) => {
     if (!token || !sessions.has(token)) {
       const response: AuthResponse = {
         success: false,
-        message: "Токен недействителен",
+        message: "Токен недействител��н",
       };
       return res.status(401).json(response);
     }
