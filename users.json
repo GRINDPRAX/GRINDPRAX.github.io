@@ -1,0 +1,36 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "demo@example.com",
+      "nickname": "DemoUser",
+      "password": "demo123",
+      "avatar": "",
+      "rating": 1250,
+      "kd": 1.35,
+      "registrationDate": "2024-01-15T10:30:00Z",
+      "status": "Игрок",
+      "level": 15,
+      "wins": 45,
+      "losses": 33,
+      "totalMatches": 78,
+      "lastLogin": "2025-07-17T14:58:33.455Z"
+    },
+    {
+      "email": "durov2007@yandex.ru",
+      "nickname": "L.ecYA",
+      "password": "Lecya2024",
+      "avatar": "",
+      "rating": 1000,
+      "kd": 0,
+      "registrationDate": "2025-07-17T14:58:33.455Z",
+      "status": "Новичок",
+      "level": 1,
+      "wins": 0,
+      "losses": 0,
+      "totalMatches": 0,
+      "lastLogin": "2025-07-17T14:58:33.455Z",
+      "id": "1752764313455ef73j"
+    }
+  ]
+}
