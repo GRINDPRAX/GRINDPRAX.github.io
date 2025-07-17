@@ -24,6 +24,13 @@ import {
   sendChatMessage,
   deleteMatchHandler,
 } from "./routes/matches";
+import {
+  getAllUsersHandler,
+  getUserByIdHandler,
+  updateUserHandler,
+  deleteUserHandler,
+  toggleAdminStatus,
+} from "./routes/userManagement";
 
 export function createServer() {
   const app = express();
