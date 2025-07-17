@@ -183,23 +183,17 @@ export const sendChatMessage: RequestHandler = (req, res) => {
 };
 
 // Удалить матч (только для админов)
-export const deleteMatchHandler: RequestHandler = (req, res) => {
-  const { matchId } = req.params;
-  const adminId = req.headers.authorization?.replace("Bearer ", "");
+export const deleteMatchHandler: RequestHandler[] = [
+  requireAuth,
+  requireAdmin,
+  (req, res) => {
+    const { matchId } = req.params;
 
-  if (!adminId) {
-    return res.status(401).json({ error: "Authorization required" });
-  }
+    const success = deleteMatch(matchId);
+    if (!success) {
+      return res.status(404).json({ error: "Match not found" });
+    }
 
-  const admin = getUserById(adminId);
-  if (!admin || admin.status !== "Администратор") {
-    return res.status(403).json({ error: "Admin access required" });
-  }
-
-  const success = deleteMatch(matchId);
-  if (!success) {
-    return res.status(404).json({ error: "Match not found" });
-  }
-
-  res.json({ success: true });
-};
+    res.json({ success: true });
+  },
+];
