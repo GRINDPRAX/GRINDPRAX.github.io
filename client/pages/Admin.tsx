@@ -178,6 +178,7 @@ export default function Admin() {
           teamBScore,
           teamA,
           teamB,
+          playerStats,
         }),
       });
 
@@ -416,7 +417,7 @@ export default function Admin() {
                   disabled={!selectedMatch || uploading}
                   className="w-full"
                 >
-                  {uploading ? "Загрузк��..." : "Загрузить результаты"}
+                  {uploading ? "Загрузка..." : "Загрузить результаты"}
                 </Button>
               </div>
             </Card>
