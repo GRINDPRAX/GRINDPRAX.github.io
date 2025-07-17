@@ -129,7 +129,7 @@ export const getProfile: RequestHandler = (req, res) => {
   try {
     const token = req.headers.authorization?.replace("Bearer ", "");
 
-    if (!token || !sessions.has(token)) {
+    if (!token || !hasSession(token)) {
       const response: AuthResponse = {
         success: false,
         message: "Токен недействителен",
@@ -137,7 +137,15 @@ export const getProfile: RequestHandler = (req, res) => {
       return res.status(401).json(response);
     }
 
-    const userId = sessions.get(token)!;
+    const userId = getSessionUserId(token);
+    if (!userId) {
+      const response: AuthResponse = {
+        success: false,
+        message: "Токен недействителен",
+      };
+      return res.status(401).json(response);
+    }
+
     const user = getUserById(userId);
 
     if (!user) {
