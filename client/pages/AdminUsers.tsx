@@ -129,11 +129,14 @@ export default function AdminUsers() {
     if (!selectedUser || !user) return;
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       const response = await fetch(`/api/admin/users/${selectedUser.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.id}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(editForm),
       });
@@ -153,10 +156,13 @@ export default function AdminUsers() {
       return;
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       const response = await fetch(`/api/admin/users/${userId}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${user.id}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -172,11 +178,14 @@ export default function AdminUsers() {
     if (!user) return;
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
       const response = await fetch(`/api/admin/users/${userId}/toggle-admin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.id}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ makeAdmin }),
       });
@@ -493,7 +502,7 @@ export default function AdminUsers() {
                         <SelectItem value="Ветеран">Ветеран</SelectItem>
                         <SelectItem value="Эксперт">Эксперт</SelectItem>
                         <SelectItem value="Элитный игрок">
-                          ��литный игрок
+                          Элитный игрок
                         </SelectItem>
                         <SelectItem value="Легенда">Легенда</SelectItem>
                         <SelectItem value="Чемпион">Чемпион</SelectItem>
