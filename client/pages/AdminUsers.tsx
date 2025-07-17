@@ -574,7 +574,9 @@ export default function AdminUsers() {
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            totalMatches: parseInt(e.target.value),
+                            totalMatches: isNaN(parseInt(e.target.value))
+                              ? 0
+                              : parseInt(e.target.value),
                           })
                         }
                       />
