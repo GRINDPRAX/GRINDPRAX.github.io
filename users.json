@@ -14,7 +14,7 @@
       "wins": 45,
       "losses": 33,
       "totalMatches": 78,
-      "lastLogin": "2025-07-17T15:16:10.352Z"
+      "lastLogin": "2025-07-17T15:33:03.189Z"
     },
     {
       "email": "durov2007@yandex.ru",
@@ -31,6 +31,22 @@
       "totalMatches": 0,
       "lastLogin": "2025-07-17T14:58:33.455Z",
       "id": "1752764313455ef73j"
+    },
+    {
+      "email": "admin@example.com",
+      "nickname": "admin",
+      "password": "admin123",
+      "avatar": "",
+      "rating": 1000,
+      "kd": 0,
+      "registrationDate": "2025-07-17T15:34:52.937Z",
+      "status": "Новичок",
+      "level": 1,
+      "wins": 0,
+      "losses": 0,
+      "totalMatches": 0,
+      "lastLogin": "2025-07-17T15:34:52.937Z",
+      "id": "1752766492937xgjve"
     }
   ]
 }
