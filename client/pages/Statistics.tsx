@@ -8,18 +8,37 @@ import { UserProfile } from "@shared/user";
 export default function Statistics() {
   const navigate = useNavigate();
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in
-    const userData = localStorage.getItem("user");
-    if (userData) {
+    const loadUserStatistics = async () => {
       try {
-        setUser(JSON.parse(userData));
+        // Check if user is logged in
+        const userData = localStorage.getItem("user");
+        if (userData) {
+          const userObj = JSON.parse(userData);
+
+          // Fetch fresh statistics from the server
+          const response = await fetch(`/api/statistics/user/${userObj.id}`);
+          if (response.ok) {
+            const freshUserData = await response.json();
+            setUser(freshUserData);
+            // Update localStorage with fresh data
+            localStorage.setItem("user", JSON.stringify(freshUserData));
+          } else {
+            setUser(userObj);
+          }
+        }
       } catch (err) {
+        console.error("Error loading user statistics:", err);
         localStorage.removeItem("user");
         localStorage.removeItem("token");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
+
+    loadUserStatistics();
   }, []);
   return (
     <div className="dark min-h-screen bg-background text-foreground">
