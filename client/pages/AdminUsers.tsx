@@ -66,9 +66,15 @@ export default function AdminUsers() {
         setUser(userObj);
 
         // Load all users
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/auth");
+          return;
+        }
+
         const usersResponse = await fetch("/api/admin/users", {
           headers: {
-            Authorization: `Bearer ${userObj.id}`,
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -487,7 +493,7 @@ export default function AdminUsers() {
                         <SelectItem value="Ветеран">Ветеран</SelectItem>
                         <SelectItem value="Эксперт">Эксперт</SelectItem>
                         <SelectItem value="Элитный игрок">
-                          Элитный игрок
+                          ��литный игрок
                         </SelectItem>
                         <SelectItem value="Легенда">Легенда</SelectItem>
                         <SelectItem value="Чемпион">Чемпион</SelectItem>
