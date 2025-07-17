@@ -173,6 +173,22 @@ function initDatabase(): Database {
           totalMatches: 315,
           lastLogin: new Date().toISOString(),
         },
+        {
+          id: "admin1",
+          email: "admin@example.com",
+          nickname: "Администратор",
+          password: "admin123",
+          avatar: "",
+          rating: 9999,
+          kd: 999.9,
+          registrationDate: "2022-01-01T00:00:00Z",
+          status: "Адм��нистратор",
+          level: 99,
+          wins: 0,
+          losses: 0,
+          totalMatches: 0,
+          lastLogin: new Date().toISOString(),
+        },
       ],
     };
     fs.writeFileSync(DB_FILE, JSON.stringify(initialDb, null, 2));
