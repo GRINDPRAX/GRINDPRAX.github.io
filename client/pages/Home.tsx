@@ -170,7 +170,7 @@ export default function Home() {
     }
   };
 
-  const getStatusText = (status: Match["status"]) => {
+  const getStatusText = (status: LocalMatch["status"]) => {
     switch (status) {
       case "live":
         return "В эфире";
