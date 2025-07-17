@@ -8,6 +8,11 @@ import {
   updateProfile,
   logout,
 } from "./routes/auth";
+import {
+  getUserStatistics,
+  getTopPlayers,
+  getAllPlayersStatistics,
+} from "./routes/statistics";
 
 export function createServer() {
   const app = express();
