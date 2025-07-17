@@ -54,7 +54,7 @@ const banners: Banner[] = [
   },
 ];
 
-const activeMatches: Match[] = [
+const activeMatches: LocalMatch[] = [
   {
     id: 1,
     team1: "Team Alpha",
