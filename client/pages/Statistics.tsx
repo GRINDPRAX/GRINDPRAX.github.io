@@ -2,9 +2,25 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { UserProfile } from "@shared/user";
 
 export default function Statistics() {
   const navigate = useNavigate();
+  const [user, setUser] = useState<UserProfile | null>(null);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (err) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+      }
+    }
+  }, []);
   return (
     <div className="dark min-h-screen bg-background text-foreground">
       {/* Top Navigation */}
@@ -18,6 +34,7 @@ export default function Statistics() {
                   variant="ghost"
                   size="sm"
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+                  onClick={() => navigate("/")}
                 >
                   🏠 Главная
                 </Button>
@@ -54,20 +71,24 @@ export default function Statistics() {
 
             {/* Right side */}
             <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                onClick={() => navigate("/")}
-              >
-                ⚙️ Настройки
-              </Button>
-              <Badge
-                variant="secondary"
-                className="bg-primary text-primary-foreground rounded-md px-2 py-1"
-              >
-                FI
-              </Badge>
+              {user ? (
+                <Badge
+                  variant="secondary"
+                  className="bg-primary text-primary-foreground rounded-md px-2 py-1 cursor-pointer hover:bg-primary/90 transition-colors"
+                  onClick={() => navigate("/profile")}
+                >
+                  {user.nickname.slice(0, 2).toUpperCase()}
+                </Badge>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate("/auth")}
+                  className="text-foreground hover:bg-muted/50"
+                >
+                  Войти
+                </Button>
+              )}
             </div>
           </div>
         </div>
