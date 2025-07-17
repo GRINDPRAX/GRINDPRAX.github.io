@@ -41,7 +41,7 @@ const banners: Banner[] = [
     title: "Лучший FACEIT по PROJECT EVOLTION",
     description: "Реально лучший",
     imageUrl: "",
-    link: "/updates/new-heroes",
+    link: "t.me/BOPUEM",
     gradient: "from-blue-600 via-purple-500 to-pink-400",
   },
   {
@@ -49,7 +49,7 @@ const banners: Banner[] = [
     title: "Премиум пропуск",
     description: "Получите эксклюзивные награды",
     imageUrl: "",
-    link: "/shop/premium-pass",
+    link: "t.me/BOPUEM",
     gradient: "from-green-600 via-teal-500 to-cyan-400",
   },
 ];
