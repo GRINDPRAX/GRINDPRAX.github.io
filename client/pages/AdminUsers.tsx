@@ -514,7 +514,7 @@ export default function AdminUsers() {
                         <SelectItem value="Администратор">
                           Администратор
                         </SelectItem>
-                        {user?.status === "Супер Администратор" && (
+                        {user?.status === "Суп��р Администратор" && (
                           <SelectItem value="Супер Администратор">
                             Супер Администратор
                           </SelectItem>
@@ -581,7 +581,9 @@ export default function AdminUsers() {
                         onChange={(e) =>
                           setEditForm({
                             ...editForm,
-                            kd: parseFloat(e.target.value),
+                            kd: isNaN(parseFloat(e.target.value))
+                              ? 0
+                              : parseFloat(e.target.value),
                           })
                         }
                       />
