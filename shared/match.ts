@@ -46,6 +46,7 @@ export interface UploadResultsRequest {
   teamBScore: number;
   teamA: string[];
   teamB: string[];
+  playerStats: PlayerStats[];
 }
 
 export interface ChatMessage {
