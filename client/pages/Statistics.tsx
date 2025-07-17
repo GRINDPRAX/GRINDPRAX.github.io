@@ -163,7 +163,7 @@ export default function Statistics() {
                 ) : (
                   <div className="text-center">
                     <Button onClick={() => navigate("/auth")}>
-                      Войти в аккаунт
+                      Войти в акка��нт
                     </Button>
                   </div>
                 )}
@@ -230,7 +230,7 @@ export default function Statistics() {
                       <div className="text-blue-400">📧</div>
                       <div>
                         <div className="text-sm font-medium text-foreground">
-                          тут@поч.та
+                          {user?.email || "Не указано"}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Электронная почта
@@ -244,7 +244,11 @@ export default function Statistics() {
                       <div className="text-blue-400">📅</div>
                       <div>
                         <div className="text-sm font-medium text-foreground">
-                          тут-да-та
+                          {user?.registrationDate
+                            ? new Date(
+                                user.registrationDate,
+                              ).toLocaleDateString("ru-RU")
+                            : "Не указано"}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Дата регистрации
@@ -255,13 +259,13 @@ export default function Statistics() {
 
                   <Card className="p-4 bg-card border-border/50 rounded-xl">
                     <div className="flex items-center space-x-3">
-                      <div className="text-blue-400">🌍</div>
+                      <div className="text-blue-400">🏆</div>
                       <div>
                         <div className="text-sm font-medium text-foreground">
-                          Russia
+                          {user?.level || 1}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          Страна
+                          Уровень
                         </div>
                       </div>
                     </div>
@@ -272,7 +276,7 @@ export default function Statistics() {
                       <div className="text-blue-400">⚙️</div>
                       <div>
                         <div className="text-sm font-medium text-foreground">
-                          default
+                          {user?.status || "Игрок"}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Тип аккаунта
