@@ -308,7 +308,7 @@ export default function AdminUsers() {
 
             <Card className="p-4 text-center">
               <div className="text-2xl font-bold text-primary">
-                {users.filter((u) => u.status === "Администратор").length}
+                {users.filter((u) => u.status === "Админис��ратор").length}
               </div>
               <div className="text-sm text-muted-foreground">
                 Администраторов
@@ -512,6 +512,11 @@ export default function AdminUsers() {
                         <SelectItem value="Администратор">
                           Администратор
                         </SelectItem>
+                        {user?.status === "Супер Администратор" && (
+                          <SelectItem value="Супер Администратор">
+                            Супер Администратор
+                          </SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
                   </div>
@@ -591,7 +596,7 @@ export default function AdminUsers() {
               >
                 Отмена
               </Button>
-              <Button onClick={handleSaveUser}>Со��ранить изменения</Button>
+              <Button onClick={handleSaveUser}>Сохранить изменения</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
