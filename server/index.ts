@@ -52,5 +52,18 @@ export function createServer() {
   app.get("/api/statistics/top", getTopPlayers);
   app.get("/api/statistics/all", getAllPlayersStatistics);
 
+  // Match routes
+  app.get("/api/matches", getMatches);
+  app.get("/api/matches/:matchId", getMatch);
+  app.post("/api/matches", createNewMatch);
+  app.post("/api/matches/join", joinMatchHandler);
+  app.post("/api/matches/:matchId/leave", leaveMatchHandler);
+  app.post("/api/matches/:matchId/results", uploadResults);
+  app.delete("/api/matches/:matchId", deleteMatchHandler);
+
+  // Chat routes
+  app.get("/api/matches/:matchId/chat", getMatchChat);
+  app.post("/api/matches/:matchId/chat", sendChatMessage);
+
   return app;
 }
