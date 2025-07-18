@@ -29,12 +29,32 @@ app.listen(port, "0.0.0.0", () => {
 });
 
 // Graceful shutdown
-process.on("SIGTERM", () => {
+process.on("SIGTERM", async () => {
   console.log("🛑 Received SIGTERM, shutting down gracefully");
+
+  // Stop Telegram bot
+  try {
+    const { TelegramService } = await import("./telegramService");
+    TelegramService.stopBot();
+    console.log("🤖 Telegram bot stopped");
+  } catch (error) {
+    console.log("⚠️ Error stopping Telegram bot:", error);
+  }
+
   process.exit(0);
 });
 
-process.on("SIGINT", () => {
+process.on("SIGINT", async () => {
   console.log("🛑 Received SIGINT, shutting down gracefully");
+
+  // Stop Telegram bot
+  try {
+    const { TelegramService } = await import("./telegramService");
+    TelegramService.stopBot();
+    console.log("🤖 Telegram bot stopped");
+  } catch (error) {
+    console.log("⚠️ Error stopping Telegram bot:", error);
+  }
+
   process.exit(0);
 });
