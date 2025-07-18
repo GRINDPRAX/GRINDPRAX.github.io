@@ -59,4 +59,5 @@ export interface UpdateProfileRequest {
   nickname?: string;
   status?: string;
   avatar?: string;
+  banner?: string;
 }
