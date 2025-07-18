@@ -197,6 +197,27 @@ export const uploadResults: RequestHandler[] = [
       }
 
       const updatedMatch = uploadMatchResults(matchId, results);
+
+      // Send Telegram notification about game finish
+      try {
+        const teamANames = teamA
+          .map((playerId) => getUserById(playerId)?.nickname || playerId)
+          .filter(Boolean);
+        const teamBNames = teamB
+          .map((playerId) => getUserById(playerId)?.nickname || playerId)
+          .filter(Boolean);
+
+        await TelegramService.notifyGameFinished(
+          match.name,
+          teamAScore,
+          teamBScore,
+          teamANames,
+          teamBNames,
+        );
+      } catch (error) {
+        console.error("Failed to send Telegram finish notification:", error);
+      }
+
       res.json(updatedMatch);
     } catch (error) {
       res.status(500).json({ error: "Failed to upload results" });
