@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { UserProfile } from "@shared/user";
+import TopNavigation from "@/components/TopNavigation";
 
 export default function Statistics() {
   const navigate = useNavigate();
@@ -40,64 +41,9 @@ export default function Statistics() {
 
     loadUserStatistics();
   }, []);
-  return (
+    return (
     <div className="dark min-h-screen bg-background text-foreground">
-      {/* Top Navigation */}
-      <nav className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-14 items-center justify-between">
-            {/* Left side navigation */}
-            <div className="flex items-center space-x-8">
-              <div className="flex items-center space-x-6">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/")}
-                >
-                  🏠 Главная
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/top")}
-                >
-                  ⚡ Топ
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                >
-                  🛒 Магазин
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/80 hover:text-foreground hover:bg-muted/50"
-                >
-                  📊 Статистика
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/admin")}
-                >
-                  🛡️ Администрация
-                </Button>
-              </div>
-            </div>
-
-            {/* Right side */}
-            <div className="flex items-center space-x-4">
-              {user ? (
-                <Badge
-                  variant="secondary"
-                  className="bg-primary text-primary-foreground rounded-md px-2 py-1 cursor-pointer hover:bg-primary/90 transition-colors"
-                  onClick={() => navigate("/profile")}
-                >
+      <TopNavigation user={user} />
                   {user.nickname.slice(0, 2).toUpperCase()}
                 </Badge>
               ) : (
