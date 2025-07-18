@@ -2,10 +2,18 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserProfile, AuthResponse, UpdateProfileRequest } from "@shared/user";
-import { Loader2, Camera, Trophy, Target, Calendar, Clock } from "lucide-react";
+import {
+  Loader2,
+  Camera,
+  Trophy,
+  Target,
+  Calendar,
+  Clock,
+  History,
+} from "lucide-react";
 
 export default function Profile() {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -14,6 +22,10 @@ export default function Profile() {
   const [error, setError] = useState("");
   const [nickname, setNickname] = useState("");
   const [status, setStatus] = useState("");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,6 +64,47 @@ export default function Profile() {
     }
   };
 
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Размер файла не должен превышать 5 МБ");
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        setError("Файл должен быть изображением");
+        return;
+      }
+      setAvatarFile(file);
+      setError("");
+    }
+  };
+
+  const handleBannerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Размер файла не должен превышать 5 МБ");
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        setError("Файл должен быть изображением");
+        return;
+      }
+      setBannerFile(file);
+      setError("");
+    }
+  };
+
   const handleSave = async () => {
     if (!user) return;
 
@@ -65,8 +118,21 @@ export default function Profile() {
         return;
       }
 
+      let avatarBase64 = undefined;
+      let bannerBase64 = undefined;
+
+      if (avatarFile) {
+        avatarBase64 = await fileToBase64(avatarFile);
+      }
+
+      if (bannerFile) {
+        bannerBase64 = await fileToBase64(bannerFile);
+      }
+
       const updates: UpdateProfileRequest = {
         nickname: nickname !== user.nickname ? nickname : undefined,
+        avatar: avatarBase64,
+        banner: bannerBase64,
       };
 
       const response = await fetch("/api/auth/profile", {
@@ -83,6 +149,8 @@ export default function Profile() {
       if (data.success && data.user) {
         setUser(data.user);
         localStorage.setItem("user", JSON.stringify(data.user));
+        setAvatarFile(null);
+        setBannerFile(null);
       } else {
         setError("Ошибка сохранения");
       }
@@ -197,7 +265,16 @@ export default function Profile() {
                   variant="ghost"
                   size="sm"
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/statistics")}
+                  onClick={() => navigate("/match-history")}
+                >
+                  <History className="h-4 w-4 mr-1" />
+                  История матчей
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+                  onClick={() => navigate("/admin")}
                 >
                   🛡️ Администрация
                 </Button>
@@ -304,16 +381,29 @@ export default function Profile() {
                     <span className="text-4xl">👤</span>
                   )}
                 </div>
+                <input
+                  type="file"
+                  ref={avatarInputRef}
+                  onChange={handleAvatarChange}
+                  accept="image/*"
+                  className="hidden"
+                />
                 <Button
                   variant="outline"
                   size="sm"
                   className="border-border/50 text-foreground/70 hover:text-foreground hover:bg-muted/50 mb-4 rounded-lg text-xs"
+                  onClick={() => avatarInputRef.current?.click()}
                 >
                   <Camera className="h-3 w-3 mr-1" />
                   Изменить
                   <br />
                   аватар
                 </Button>
+                {avatarFile && (
+                  <p className="text-xs text-green-500 mt-1">
+                    Файл выбран: {avatarFile.name}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-3 mt-4">
@@ -387,20 +477,39 @@ export default function Profile() {
             {/* Banner Card */}
             <Card className="mb-4 overflow-hidden border-border/50 rounded-xl">
               <div className="relative h-36 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-400">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-600/95 via-orange-500/90 to-orange-400/85"></div>
+                {user.banner ? (
+                  <img
+                    src={user.banner}
+                    alt="Banner"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-600/95 via-orange-500/90 to-orange-400/85"></div>
+                )}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center text-white">
-                    <h3 className="text-sm font-medium">Изменить банер</h3>
+                    <input
+                      type="file"
+                      ref={bannerInputRef}
+                      onChange={handleBannerChange}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-white hover:bg-white/20 bg-black/20 rounded-lg"
+                      onClick={() => bannerInputRef.current?.click()}
+                    >
+                      <Camera className="h-4 w-4 mr-2" />
+                      Изменить банер
+                    </Button>
+                    {bannerFile && (
+                      <p className="text-xs mt-1">
+                        Файл выбран: {bannerFile.name}
+                      </p>
+                    )}
                   </div>
-                </div>
-                <div className="absolute top-3 right-3">
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="text-white hover:bg-white/20 h-8 w-8 rounded-lg"
-                  >
-                    ➡️
-                  </Button>
                 </div>
               </div>
             </Card>
