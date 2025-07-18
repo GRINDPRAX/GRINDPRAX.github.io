@@ -33,15 +33,15 @@ const banners: Banner[] = [
     title: "Телеграм канал",
     description: "Подпишитесь",
     imageUrl: "",
-    link: "t.me/BOPUEM",
+    link: "https://t.me/BOPUEM",
     gradient: "from-orange-600 via-orange-500 to-orange-400",
   },
   {
     id: 2,
-    title: "Лучший FACEIT по PROJECT EVOLTION",
+    title: "Лучший FACEIT по PROJECT EVOLUTION",
     description: "Реально лучший",
     imageUrl: "",
-    link: "t.me/BOPUEM",
+    link: "https://t.me/BOPUEM",
     gradient: "from-blue-600 via-purple-500 to-pink-400",
   },
   {
@@ -49,7 +49,7 @@ const banners: Banner[] = [
     title: "Премиум пропуск",
     description: "Получите эксклюзивные награды",
     imageUrl: "",
-    link: "t.me/BOPUEM",
+    link: "https://t.me/BOPUEM",
     gradient: "from-green-600 via-teal-500 to-cyan-400",
   },
 ];
@@ -433,7 +433,7 @@ export default function Home() {
                   >
                     {user
                       ? match.currentPlayers.length >= match.maxPlayers
-                        ? "Матч полный"
+                        ? "��атч полный"
                         : "Присоединиться"
                       : "Войти для участия"}
                   </Button>
