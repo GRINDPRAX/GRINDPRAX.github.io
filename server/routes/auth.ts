@@ -95,6 +95,7 @@ export const register: RequestHandler = (req, res) => {
       nickname,
       password,
       avatar: "",
+      banner: "",
       rating: 1000,
       kd: 0,
       registrationDate: new Date().toISOString(),
