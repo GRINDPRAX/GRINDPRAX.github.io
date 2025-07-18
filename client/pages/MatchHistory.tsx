@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   Clock,
 } from "lucide-react";
+import TopNavigation from "@/components/TopNavigation";
 
 export default function MatchHistory() {
   const [user, setUser] = useState<UserProfile | null>(null);
