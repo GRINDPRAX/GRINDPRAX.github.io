@@ -32,6 +32,7 @@ export interface MatchResults {
 export interface CreateMatchRequest {
   name: string;
   teamSize: number;
+  adminId?: string;
 }
 
 export interface JoinMatchRequest {

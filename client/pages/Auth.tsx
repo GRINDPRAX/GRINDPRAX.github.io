@@ -2,10 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthResponse, LoginRequest, RegisterRequest } from "@shared/user";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, MessageCircle } from "lucide-react";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -24,6 +24,52 @@ export default function Auth() {
     nickname: "",
     password: "",
   });
+
+  // Telegram auth
+  const handleTelegramAuth = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      // Check if Telegram WebApp API is available
+      if (typeof window !== "undefined" && (window as any).Telegram?.WebApp) {
+        const tg = (window as any).Telegram.WebApp;
+        const initData = tg.initData;
+
+        if (initData) {
+          const response = await fetch("/api/auth/telegram", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ initData }),
+          });
+
+          const data: AuthResponse = await response.json();
+
+          if (data.success && data.token) {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+            navigate("/");
+          } else {
+            setError(data.message || "Ошибка авторизации через Telegram");
+          }
+        } else {
+          setError("Не удалось получить данные из Telegram");
+        }
+      } else {
+        // Fallback: Open Telegram bot link
+        const botUsername = "YOUR_BOT_USERNAME"; // Replace with actual bot username
+        const authUrl = `https://t.me/${botUsername}?start=auth`;
+        window.open(authUrl, "_blank");
+        setError("Перейдите в Telegram бота для авторизации");
+      }
+    } catch (err) {
+      setError("Ошибка авторизации через Telegram");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -302,6 +348,27 @@ export default function Auth() {
             </form>
           )}
 
+          {/* Telegram Login */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border/50" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">или</span>
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full mt-4 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white border-[#0088cc]"
+              onClick={handleTelegramAuth}
+              disabled={loading}
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Войти через Telegram
+            </Button>
+          </div>
         </Card>
 
         {/* Back to Home */}

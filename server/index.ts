@@ -7,6 +7,7 @@ import {
   getProfile,
   updateProfile,
   logout,
+  telegramAuth,
 } from "./routes/auth";
 import {
   getUserStatistics,
@@ -50,9 +51,28 @@ export function createServer() {
   // Authentication routes
   app.post("/api/auth/login", login);
   app.post("/api/auth/register", register);
+  app.post("/api/auth/telegram", telegramAuth);
   app.get("/api/auth/profile", getProfile);
   app.put("/api/auth/profile", updateProfile);
   app.post("/api/auth/logout", logout);
+
+  // Telegram test endpoint (admin only)
+  app.post("/api/telegram/test", async (req, res) => {
+    try {
+      const { TelegramService } = await import("./telegramService");
+      const success = await TelegramService.testConnection();
+      res.json({
+        success,
+        message: success
+          ? "Telegram test sent!"
+          : "Failed to send test message",
+      });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ success: false, message: "Error testing Telegram" });
+    }
+  });
 
   // Statistics routes
   app.get("/api/statistics/user/:userId", getUserStatistics);

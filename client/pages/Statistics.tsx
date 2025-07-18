@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { UserProfile } from "@shared/user";
+import TopNavigation from "@/components/TopNavigation";
 
 export default function Statistics() {
   const navigate = useNavigate();
@@ -40,80 +41,10 @@ export default function Statistics() {
 
     loadUserStatistics();
   }, []);
+
   return (
     <div className="dark min-h-screen bg-background text-foreground">
-      {/* Top Navigation */}
-      <nav className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-14 items-center justify-between">
-            {/* Left side navigation */}
-            <div className="flex items-center space-x-8">
-              <div className="flex items-center space-x-6">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/")}
-                >
-                  🏠 Главная
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/top")}
-                >
-                  ⚡ Топ
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                >
-                  🛒 Магазин
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/80 hover:text-foreground hover:bg-muted/50"
-                >
-                  📊 Статистика
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/admin")}
-                >
-                  🛡️ Администрация
-                </Button>
-              </div>
-            </div>
-
-            {/* Right side */}
-            <div className="flex items-center space-x-4">
-              {user ? (
-                <Badge
-                  variant="secondary"
-                  className="bg-primary text-primary-foreground rounded-md px-2 py-1 cursor-pointer hover:bg-primary/90 transition-colors"
-                  onClick={() => navigate("/profile")}
-                >
-                  {user.nickname.slice(0, 2).toUpperCase()}
-                </Badge>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigate("/auth")}
-                  className="text-foreground hover:bg-muted/50"
-                >
-                  Войти
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
+      <TopNavigation user={user} />
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
@@ -164,7 +95,7 @@ export default function Statistics() {
                 ) : (
                   <div className="text-center">
                     <Button onClick={() => navigate("/auth")}>
-                      Войти в акка��нт
+                      Войти в аккаунт
                     </Button>
                   </div>
                 )}
@@ -256,7 +187,7 @@ export default function Statistics() {
 
                   <Card className="p-4 bg-card border-border/50 rounded-xl">
                     <div className="flex items-center space-x-3">
-                      <div className="text-blue-400">���</div>
+                      <div className="text-blue-400">📅</div>
                       <div>
                         <div className="text-sm font-medium text-foreground">
                           {user?.registrationDate

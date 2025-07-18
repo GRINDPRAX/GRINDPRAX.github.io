@@ -17,6 +17,7 @@ import {
   UploadResultsRequest,
 } from "@shared/match";
 import { requireAuth, requireAdmin } from "../middleware";
+import { TelegramService } from "../telegramService";
 
 // Получить все матчи
 export const getMatches: RequestHandler = (req, res) => {
@@ -41,8 +42,13 @@ export const createNewMatch: RequestHandler[] = [
   requireAuth,
   requireAdmin,
   (req, res) => {
-    const { name, teamSize } = req.body as CreateMatchRequest;
-    const adminId = (req as any).userId;
+    const {
+      name,
+      teamSize,
+      adminId: customAdminId,
+    } = req.body as CreateMatchRequest;
+    const defaultAdminId = (req as any).userId;
+    const adminId = customAdminId || defaultAdminId;
 
     if (!name || !teamSize || teamSize < 2 || teamSize > 5) {
       return res.status(400).json({ error: "Invalid match parameters" });
@@ -66,7 +72,7 @@ export const createNewMatch: RequestHandler[] = [
 ];
 
 // Присоединиться к матчу
-export const joinMatchHandler: RequestHandler = (req, res) => {
+export const joinMatchHandler: RequestHandler = async (req, res) => {
   const { matchId, userId } = req.body as JoinMatchRequest;
 
   if (!matchId || !userId) {
@@ -81,6 +87,31 @@ export const joinMatchHandler: RequestHandler = (req, res) => {
   const updatedMatch = joinMatch(matchId, userId);
   if (!updatedMatch) {
     return res.status(400).json({ error: "Cannot join match" });
+  }
+
+  // Send Telegram notification when player joins
+  try {
+    await TelegramService.notifyPlayerJoined(
+      updatedMatch.name,
+      user.nickname,
+      updatedMatch.currentPlayers.length,
+      updatedMatch.maxPlayers,
+    );
+
+    // If match is full, start the game and send start notification
+    if (updatedMatch.currentPlayers.length >= updatedMatch.maxPlayers) {
+      const playerNames = updatedMatch.currentPlayers
+        .map((playerId) => getUserById(playerId)?.nickname || playerId)
+        .filter(Boolean);
+
+      await TelegramService.notifyGameStarted(
+        updatedMatch.name,
+        playerNames,
+        updatedMatch.teamSize,
+      );
+    }
+  } catch (error) {
+    console.error("Failed to send Telegram notification:", error);
   }
 
   res.json(updatedMatch);
@@ -107,7 +138,7 @@ export const leaveMatchHandler: RequestHandler = (req, res) => {
 export const uploadResults: RequestHandler[] = [
   requireAuth,
   requireAdmin,
-  (req, res) => {
+  async (req, res) => {
     const { matchId } = req.params;
     const { screenshot, teamAScore, teamBScore, teamA, teamB, playerStats } =
       req.body as UploadResultsRequest;
@@ -166,6 +197,27 @@ export const uploadResults: RequestHandler[] = [
       }
 
       const updatedMatch = uploadMatchResults(matchId, results);
+
+      // Send Telegram notification about game finish
+      try {
+        const teamANames = teamA
+          .map((playerId) => getUserById(playerId)?.nickname || playerId)
+          .filter(Boolean);
+        const teamBNames = teamB
+          .map((playerId) => getUserById(playerId)?.nickname || playerId)
+          .filter(Boolean);
+
+        await TelegramService.notifyGameFinished(
+          match.name,
+          teamAScore,
+          teamBScore,
+          teamANames,
+          teamBNames,
+        );
+      } catch (error) {
+        console.error("Failed to send Telegram finish notification:", error);
+      }
+
       res.json(updatedMatch);
     } catch (error) {
       res.status(500).json({ error: "Failed to upload results" });

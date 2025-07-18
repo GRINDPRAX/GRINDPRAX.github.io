@@ -4,6 +4,8 @@ export interface User {
   nickname: string;
   password: string; // В реальном проекте должен быть хэширован
   avatar?: string;
+  banner?: string;
+  telegramId?: string; // Telegram user ID
   rating: number;
   kills: number; // Total kills
   deaths: number; // Total deaths
@@ -22,6 +24,8 @@ export interface UserProfile {
   email: string;
   nickname: string;
   avatar?: string;
+  banner?: string;
+  telegramId?: string;
   rating: number;
   kills: number;
   deaths: number;
@@ -57,4 +61,9 @@ export interface UpdateProfileRequest {
   nickname?: string;
   status?: string;
   avatar?: string;
+  banner?: string;
+}
+
+export interface TelegramAuthRequest {
+  initData: string;
 }

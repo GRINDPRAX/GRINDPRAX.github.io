@@ -182,6 +182,11 @@ export default function Lobby() {
               <Badge variant="outline">
                 {match?.currentPlayers.length}/{match?.maxPlayers}
               </Badge>
+              {match?.createdBy && (
+                <Badge variant="secondary" className="text-xs">
+                  👨‍💼 Админ: {match.createdBy}
+                </Badge>
+              )}
             </div>
 
             <div className="flex items-center space-x-4">
@@ -235,6 +240,14 @@ export default function Lobby() {
               <div className="text-sm text-muted-foreground">
                 Формат: {match?.teamSize}x{match?.teamSize} •{" "}
                 {match?.currentPlayers.length}/{match?.maxPlayers} игроков
+                {match?.createdBy && (
+                  <>
+                    {" • "}
+                    <span className="text-primary">
+                      👨‍💼 Админ в игре: {match.createdBy}
+                    </span>
+                  </>
+                )}
               </div>
             </Card>
 

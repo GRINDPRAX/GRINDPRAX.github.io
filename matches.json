@@ -1,3 +1,35 @@
 {
-  "matches": []
+  "matches": [
+    {
+      "name": "окак",
+      "teamSize": 2,
+      "maxPlayers": 4,
+      "currentPlayers": [
+        "1"
+      ],
+      "status": "completed",
+      "createdBy": "1",
+      "id": "1752829708992ri1fe",
+      "createdAt": "2025-07-18T09:08:28.992Z",
+      "results": {
+        "screenshot": "",
+        "teamAScore": 10,
+        "teamBScore": 8,
+        "teamA": [
+          "1"
+        ],
+        "teamB": [],
+        "playerStats": [
+          {
+            "userId": "1",
+            "kills": 16,
+            "deaths": 7
+          }
+        ],
+        "uploadedBy": "1",
+        "uploadedAt": "2025-07-18T09:08:49.000Z"
+      },
+      "completedAt": "2025-07-18T09:08:49.001Z"
+    }
+  ]
 }
