@@ -56,6 +56,24 @@ export function createServer() {
   app.put("/api/auth/profile", updateProfile);
   app.post("/api/auth/logout", logout);
 
+  // Telegram test endpoint (admin only)
+  app.post("/api/telegram/test", async (req, res) => {
+    try {
+      const { TelegramService } = await import("./telegramService");
+      const success = await TelegramService.testConnection();
+      res.json({
+        success,
+        message: success
+          ? "Telegram test sent!"
+          : "Failed to send test message",
+      });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ success: false, message: "Error testing Telegram" });
+    }
+  });
+
   // Statistics routes
   app.get("/api/statistics/user/:userId", getUserStatistics);
   app.get("/api/statistics/top", getTopPlayers);
