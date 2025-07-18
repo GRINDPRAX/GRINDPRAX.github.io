@@ -89,12 +89,17 @@ export function loadTelegramConfig(): AppTelegramConfig {
     // Переопределяем значения из environment variables если они есть
     token: process.env.TELEGRAM_BOT_TOKEN || defaultTelegramConfig.token,
     notificationChatId:
-      process.env.TELEGRAM_CHAT_ID || defaultTelegramConfig.notificationChatId,
+      process.env.TELEGRAM_CHAT_ID ||
+      process.env.TELEGRAM_NOTIFICATION_CHAT_ID ||
+      defaultTelegramConfig.notificationChatId,
     adminChatId:
       process.env.TELEGRAM_ADMIN_CHAT_ID || defaultTelegramConfig.adminChatId,
     webhookUrl:
       process.env.TELEGRAM_WEBHOOK_URL || defaultTelegramConfig.webhookUrl,
-    enableNotifications: process.env.TELEGRAM_NOTIFICATIONS !== "false",
+    enableNotifications:
+      process.env.NODE_ENV === "production"
+        ? process.env.TELEGRAM_NOTIFICATIONS !== "false"
+        : process.env.TELEGRAM_NOTIFICATIONS === "true",
     enableAuth: process.env.TELEGRAM_AUTH !== "false",
     autoCreateUsers: process.env.TELEGRAM_AUTO_CREATE_USERS !== "false",
   };
@@ -111,7 +116,10 @@ export function validateTelegramConfig(config: AppTelegramConfig): {
     errors.push("Отсутствует или некорректный TELEGRAM_BOT_TOKEN");
   }
 
-  if (config.enableNotifications && !config.notificationChatId) {
+  if (
+    config.enableNotifications &&
+    (!config.notificationChatId || config.notificationChatId.trim() === "")
+  ) {
     errors.push(
       "Уведомления включены, но не указан TELEGRAM_CHAT_ID или TELEGRAM_NOTIFICATION_CHAT_ID",
     );
@@ -140,7 +148,7 @@ export function getTelegramConfigForEnvironment(
   switch (env) {
     case "development":
       return {
-        enableNotifications: false,
+        enableNotifications: process.env.TELEGRAM_NOTIFICATIONS === "true",
         limits: {
           ...defaultTelegramConfig.limits,
           commandCooldown: 500,
@@ -148,7 +156,7 @@ export function getTelegramConfigForEnvironment(
       };
     case "production":
       return {
-        enableNotifications: true,
+        enableNotifications: process.env.TELEGRAM_NOTIFICATIONS !== "false",
         limits: {
           ...defaultTelegramConfig.limits,
           commandCooldown: 2000,
