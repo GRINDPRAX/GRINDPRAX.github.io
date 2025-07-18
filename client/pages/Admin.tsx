@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { UserProfile } from "@shared/user";
 import { Match } from "@shared/match";
 import TopNavigation from "@/components/TopNavigation";
+import { TelegramBotManager } from "@/components/TelegramBotManager";
 import {
   Loader2,
   Plus,
@@ -24,6 +25,7 @@ import {
   Users,
   Settings,
   MessageSquare,
+  Bot,
 } from "lucide-react";
 
 export default function Admin() {
@@ -47,6 +49,11 @@ export default function Admin() {
     Array<{ userId: string; kills: number; deaths: number }>
   >([]);
   const [uploading, setUploading] = useState(false);
+
+  // Current admin tab
+  const [currentTab, setCurrentTab] = useState<
+    "matches" | "users" | "settings" | "telegram"
+  >("matches");
 
   useEffect(() => {
     const loadData = async () => {
@@ -255,24 +262,51 @@ export default function Admin() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-12 items-center space-x-6">
             <Button
-              variant="default"
+              variant={currentTab === "matches" ? "default" : "ghost"}
               size="sm"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
+              className={
+                currentTab === "matches"
+                  ? "bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
+                  : "text-foreground/60 hover:text-foreground hover:bg-muted/50"
+              }
+              onClick={() => setCurrentTab("matches")}
             >
               🛡️ Матчи
             </Button>
             <Button
-              variant="ghost"
+              variant={currentTab === "users" ? "default" : "ghost"}
               size="sm"
-              className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+              className={
+                currentTab === "users"
+                  ? "bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
+                  : "text-foreground/60 hover:text-foreground hover:bg-muted/50"
+              }
               onClick={() => navigate("/admin/users")}
             >
               👥 Пользователи
             </Button>
             <Button
-              variant="ghost"
+              variant={currentTab === "telegram" ? "default" : "ghost"}
               size="sm"
-              className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+              className={
+                currentTab === "telegram"
+                  ? "bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
+                  : "text-foreground/60 hover:text-foreground hover:bg-muted/50"
+              }
+              onClick={() => setCurrentTab("telegram")}
+            >
+              <Bot className="h-4 w-4 mr-1" />
+              Телеграм Бот
+            </Button>
+            <Button
+              variant={currentTab === "settings" ? "default" : "ghost"}
+              size="sm"
+              className={
+                currentTab === "settings"
+                  ? "bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg"
+                  : "text-foreground/60 hover:text-foreground hover:bg-muted/50"
+              }
+              onClick={() => setCurrentTab("settings")}
             >
               <Settings className="h-4 w-4 mr-1" />
               Настройки
@@ -294,7 +328,7 @@ export default function Admin() {
               }}
             >
               <MessageSquare className="h-4 w-4 mr-1" />
-              Тест Телеграм
+              Тест
             </Button>
           </div>
         </div>
@@ -306,298 +340,329 @@ export default function Admin() {
           {/* Header */}
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold text-primary">
-              🛡️ Управление матчами
+              {currentTab === "matches" && "🛡️ Управление матчами"}
+              {currentTab === "telegram" && "🤖 Управ��ение Telegram ботом"}
+              {currentTab === "settings" && "⚙️ Настройки системы"}
             </h1>
             <p className="text-muted-foreground">
-              Создание и управление игровыми матчами
+              {currentTab === "matches" &&
+                "Создание и управление игровыми матчами"}
+              {currentTab === "telegram" &&
+                "Конфигурация и управление Telegram ботом"}
+              {currentTab === "settings" && "Общие настройки системы"}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Create Match */}
-            <Card className="p-6 bg-card border-border/50 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4 flex items-center">
-                <Plus className="h-5 w-5 mr-2" />
-                Создать матч
-              </h2>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="matchName">Название матча</Label>
-                  <Input
-                    id="matchName"
-                    value={matchName}
-                    onChange={(e) => setMatchName(e.target.value)}
-                    placeholder="Введите название матча"
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="teamSize">Размер команды</Label>
-                  <Select
-                    value={teamSize.toString()}
-                    onValueChange={(value) => setTeamSize(parseInt(value))}
-                  >
-                    <SelectTrigger className="mt-1">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="2">2v2</SelectItem>
-                      <SelectItem value="3">3v3</SelectItem>
-                      <SelectItem value="4">4v4</SelectItem>
-                      <SelectItem value="5">5v5</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="adminId">ID Администратора в игре</Label>
-                  <Input
-                    id="adminId"
-                    value={adminId}
-                    onChange={(e) => setAdminId(e.target.value)}
-                    placeholder="Введите ID админа в игре"
-                    className="mt-1"
-                  />
-                </div>
-                <Button
-                  onClick={handleCreateMatch}
-                  disabled={creating || !matchName.trim() || !adminId.trim()}
-                  className="w-full"
-                >
-                  {creating ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Создание...
-                    </>
-                  ) : (
-                    <>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Создать матч
-                    </>
-                  )}
-                </Button>
-              </div>
-            </Card>
-
-            {/* Upload Results */}
-            <Card className="p-6 bg-card border-border/50 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4 flex items-center">
-                <Upload className="h-5 w-5 mr-2" />
-                Загрузить результаты
-              </h2>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="selectMatch">Выберите матч</Label>
-                  <Select
-                    value={selectedMatch}
-                    onValueChange={setSelectedMatch}
-                  >
-                    <SelectTrigger className="mt-1">
-                      <SelectValue placeholder="Выберите матч" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {matches
-                        .filter((match) => match.status === "in_progress")
-                        .map((match) => (
-                          <SelectItem key={match.id} value={match.id}>
-                            {match.name}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="teamAScore">Счет команды А</Label>
-                    <Input
-                      id="teamAScore"
-                      type="number"
-                      value={teamAScore}
-                      onChange={(e) =>
-                        setTeamAScore(parseInt(e.target.value) || 0)
-                      }
-                      className="mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="teamBScore">Счет команды Б</Label>
-                    <Input
-                      id="teamBScore"
-                      type="number"
-                      value={teamBScore}
-                      onChange={(e) =>
-                        setTeamBScore(parseInt(e.target.value) || 0)
-                      }
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="screenshot">Скриншот результатов</Label>
-                  <Input
-                    id="screenshot"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <Label>Статистика игроков</Label>
+          {/* Tab Content */}
+          {currentTab === "matches" && (
+            <>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Create Match */}
+                <Card className="p-6 bg-card border-border/50 rounded-xl">
+                  <h2 className="text-xl font-semibold mb-4 flex items-center">
+                    <Plus className="h-5 w-5 mr-2" />
+                    Создать матч
+                  </h2>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="matchName">Название матча</Label>
+                      <Input
+                        id="matchName"
+                        value={matchName}
+                        onChange={(e) => setMatchName(e.target.value)}
+                        placeholder="Введите название матча"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="teamSize">Размер команды</Label>
+                      <Select
+                        value={teamSize.toString()}
+                        onValueChange={(value) => setTeamSize(parseInt(value))}
+                      >
+                        <SelectTrigger className="mt-1">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="2">2v2</SelectItem>
+                          <SelectItem value="3">3v3</SelectItem>
+                          <SelectItem value="4">4v4</SelectItem>
+                          <SelectItem value="5">5v5</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="adminId">ID Администратора в игре</Label>
+                      <Input
+                        id="adminId"
+                        value={adminId}
+                        onChange={(e) => setAdminId(e.target.value)}
+                        placeholder="Введите ID админа в игре"
+                        className="mt-1"
+                      />
+                    </div>
                     <Button
-                      type="button"
-                      onClick={handleAddPlayerStat}
-                      size="sm"
-                      variant="outline"
+                      onClick={handleCreateMatch}
+                      disabled={
+                        creating || !matchName.trim() || !adminId.trim()
+                      }
+                      className="w-full"
                     >
-                      <Plus className="h-4 w-4 mr-1" />
-                      Добавить
+                      {creating ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Создание...
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-4 w-4 mr-2" />
+                          Создать матч
+                        </>
+                      )}
                     </Button>
                   </div>
-                  {playerStats.map((stat, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center space-x-2 mb-2"
-                    >
-                      <Input
-                        placeholder="ID игрока"
-                        value={stat.userId}
-                        onChange={(e) =>
-                          handlePlayerStatChange(
-                            index,
-                            "userId",
-                            e.target.value,
-                          )
-                        }
-                        className="flex-1"
-                      />
-                      <Input
-                        placeholder="Убийства"
-                        type="number"
-                        value={stat.kills}
-                        onChange={(e) =>
-                          handlePlayerStatChange(
-                            index,
-                            "kills",
-                            parseInt(e.target.value) || 0,
-                          )
-                        }
-                        className="w-24"
-                      />
-                      <Input
-                        placeholder="Смерти"
-                        type="number"
-                        value={stat.deaths}
-                        onChange={(e) =>
-                          handlePlayerStatChange(
-                            index,
-                            "deaths",
-                            parseInt(e.target.value) || 0,
-                          )
-                        }
-                        className="w-24"
-                      />
-                      <Button
-                        type="button"
-                        onClick={() => handleRemovePlayerStat(index)}
-                        size="sm"
-                        variant="outline"
+                </Card>
+
+                {/* Upload Results */}
+                <Card className="p-6 bg-card border-border/50 rounded-xl">
+                  <h2 className="text-xl font-semibold mb-4 flex items-center">
+                    <Upload className="h-5 w-5 mr-2" />
+                    Загрузить результаты
+                  </h2>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="selectMatch">Выберите матч</Label>
+                      <Select
+                        value={selectedMatch}
+                        onValueChange={setSelectedMatch}
                       >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="Выберите матч" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {matches
+                            .filter((match) => match.status === "in_progress")
+                            .map((match) => (
+                              <SelectItem key={match.id} value={match.id}>
+                                {match.name}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
                     </div>
-                  ))}
-                </div>
 
-                <Button
-                  onClick={handleUploadResults}
-                  disabled={uploading || !selectedMatch}
-                  className="w-full"
-                >
-                  {uploading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Загрузка...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="h-4 w-4 mr-2" />
-                      Загрузить результаты
-                    </>
-                  )}
-                </Button>
-              </div>
-            </Card>
-          </div>
-
-          {/* Active Matches */}
-          <Card className="p-6 bg-card border-border/50 rounded-xl">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <Users className="h-5 w-5 mr-2" />
-              Активные матчи
-            </h2>
-            <div className="space-y-4">
-              {matches.length > 0 ? (
-                matches.map((match) => (
-                  <Card
-                    key={match.id}
-                    className="p-4 border-border/50 rounded-lg"
-                  >
-                    <div className="flex items-center justify-between">
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <h3 className="font-semibold">{match.name}</h3>
-                        <div className="text-sm text-muted-foreground">
-                          {match.teamSize}v{match.teamSize} •{" "}
-                          {match.currentPlayers.length}/{match.maxPlayers}{" "}
-                          игроков
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          Создан:{" "}
-                          {new Date(match.createdAt).toLocaleString("ru-RU")}
-                        </div>
-                        {match.createdBy && (
-                          <div className="text-xs text-muted-foreground">
-                            Админ в игре: {match.createdBy}
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge
-                          variant={
-                            match.status === "waiting"
-                              ? "default"
-                              : match.status === "in_progress"
-                                ? "secondary"
-                                : "outline"
+                        <Label htmlFor="teamAScore">Счет команды А</Label>
+                        <Input
+                          id="teamAScore"
+                          type="number"
+                          value={teamAScore}
+                          onChange={(e) =>
+                            setTeamAScore(parseInt(e.target.value) || 0)
                           }
-                        >
-                          {match.status === "waiting"
-                            ? "Ожидание"
-                            : match.status === "in_progress"
-                              ? "В процессе"
-                              : "Завершен"}
-                        </Badge>
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="teamBScore">Счет команды Б</Label>
+                        <Input
+                          id="teamBScore"
+                          type="number"
+                          value={teamBScore}
+                          onChange={(e) =>
+                            setTeamBScore(parseInt(e.target.value) || 0)
+                          }
+                          className="mt-1"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="screenshot">Скриншот результатов</Label>
+                      <Input
+                        id="screenshot"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <Label>Статистика игроков</Label>
                         <Button
-                          onClick={() => handleDeleteMatch(match.id)}
+                          type="button"
+                          onClick={handleAddPlayerStat}
                           size="sm"
-                          variant="destructive"
+                          variant="outline"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Plus className="h-4 w-4 mr-1" />
+                          Добавить
                         </Button>
                       </div>
+                      {playerStats.map((stat, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center space-x-2 mb-2"
+                        >
+                          <Input
+                            placeholder="ID игрока"
+                            value={stat.userId}
+                            onChange={(e) =>
+                              handlePlayerStatChange(
+                                index,
+                                "userId",
+                                e.target.value,
+                              )
+                            }
+                            className="flex-1"
+                          />
+                          <Input
+                            placeholder="Убийства"
+                            type="number"
+                            value={stat.kills}
+                            onChange={(e) =>
+                              handlePlayerStatChange(
+                                index,
+                                "kills",
+                                parseInt(e.target.value) || 0,
+                              )
+                            }
+                            className="w-24"
+                          />
+                          <Input
+                            placeholder="Смерти"
+                            type="number"
+                            value={stat.deaths}
+                            onChange={(e) =>
+                              handlePlayerStatChange(
+                                index,
+                                "deaths",
+                                parseInt(e.target.value) || 0,
+                              )
+                            }
+                            className="w-24"
+                          />
+                          <Button
+                            type="button"
+                            onClick={() => handleRemovePlayerStat(index)}
+                            size="sm"
+                            variant="outline"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ))}
                     </div>
-                  </Card>
-                ))
-              ) : (
-                <div className="text-center text-muted-foreground py-8">
-                  Нет активных матчей
+
+                    <Button
+                      onClick={handleUploadResults}
+                      disabled={uploading || !selectedMatch}
+                      className="w-full"
+                    >
+                      {uploading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Загрузка...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-4 w-4 mr-2" />
+                          Загрузить результаты
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </Card>
+              </div>
+
+              {/* Active Matches */}
+              <Card className="p-6 bg-card border-border/50 rounded-xl">
+                <h2 className="text-xl font-semibold mb-4 flex items-center">
+                  <Users className="h-5 w-5 mr-2" />
+                  Активные матчи
+                </h2>
+                <div className="space-y-4">
+                  {matches.length > 0 ? (
+                    matches.map((match) => (
+                      <Card
+                        key={match.id}
+                        className="p-4 border-border/50 rounded-lg"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="font-semibold">{match.name}</h3>
+                            <div className="text-sm text-muted-foreground">
+                              {match.teamSize}v{match.teamSize} •{" "}
+                              {match.currentPlayers.length}/{match.maxPlayers}{" "}
+                              игроков
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Создан:{" "}
+                              {new Date(match.createdAt).toLocaleString(
+                                "ru-RU",
+                              )}
+                            </div>
+                            {match.createdBy && (
+                              <div className="text-xs text-muted-foreground">
+                                Админ в игре: {match.createdBy}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Badge
+                              variant={
+                                match.status === "waiting"
+                                  ? "default"
+                                  : match.status === "in_progress"
+                                    ? "secondary"
+                                    : "outline"
+                              }
+                            >
+                              {match.status === "waiting"
+                                ? "Ожидание"
+                                : match.status === "in_progress"
+                                  ? "В процессе"
+                                  : "Завершен"}
+                            </Badge>
+                            <Button
+                              onClick={() => handleDeleteMatch(match.id)}
+                              size="sm"
+                              variant="destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    ))
+                  ) : (
+                    <div className="text-center text-muted-foreground py-8">
+                      Нет активных матчей
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </Card>
+              </Card>
+            </>
+          )}
+
+          {/* Telegram Bot Management Tab */}
+          {currentTab === "telegram" && <TelegramBotManager />}
+
+          {/* Settings Tab */}
+          {currentTab === "settings" && (
+            <Card className="p-6 bg-card border-border/50 rounded-xl">
+              <h2 className="text-xl font-semibold mb-4 flex items-center">
+                <Settings className="h-5 w-5 mr-2" />
+                Настройки системы
+              </h2>
+              <div className="text-center text-muted-foreground py-8">
+                Раздел настроек в разработке...
+              </div>
+            </Card>
+          )}
         </div>
       </main>
     </div>
