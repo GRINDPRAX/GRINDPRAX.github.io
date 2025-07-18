@@ -63,3 +63,7 @@ export interface UpdateProfileRequest {
   avatar?: string;
   banner?: string;
 }
+
+export interface TelegramAuthRequest {
+  initData: string;
+}
