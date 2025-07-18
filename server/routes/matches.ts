@@ -138,7 +138,7 @@ export const leaveMatchHandler: RequestHandler = (req, res) => {
 export const uploadResults: RequestHandler[] = [
   requireAuth,
   requireAdmin,
-  (req, res) => {
+  async (req, res) => {
     const { matchId } = req.params;
     const { screenshot, teamAScore, teamBScore, teamA, teamB, playerStats } =
       req.body as UploadResultsRequest;
