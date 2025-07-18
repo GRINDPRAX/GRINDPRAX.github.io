@@ -13,8 +13,8 @@ import Auth from "./pages/Auth";
 import Statistics from "./pages/Statistics";
 import Top from "./pages/Top";
 import Lobby from "./pages/Lobby";
-import Admin from "./pages/Admin";
-import AdminUsers from "./pages/AdminUsers";
+// import Admin from "./pages/Admin";
+// import AdminUsers from "./pages/AdminUsers";
 import MatchHistory from "./pages/MatchHistory";
 import NotFound from "./pages/NotFound";
 
