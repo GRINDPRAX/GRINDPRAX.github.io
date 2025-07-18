@@ -111,7 +111,7 @@ export function validateTelegramConfig(config: AppTelegramConfig): {
   const errors: string[] = [];
 
   if (!config.token || config.token.length < 10) {
-    errors.push("Отсутст��ует или некорректный TELEGRAM_BOT_TOKEN");
+    errors.push("Отсутствует или некорректный TELEGRAM_BOT_TOKEN");
   }
 
   if (
@@ -143,10 +143,12 @@ export function validateTelegramConfig(config: AppTelegramConfig): {
 export function getTelegramConfigForEnvironment(
   env: "development" | "production" | "test",
 ): Partial<AppTelegramConfig> {
+  const baseConfig = loadTelegramConfig();
+
   switch (env) {
     case "development":
       return {
-        enableNotifications: false,
+        enableNotifications: baseConfig.enableNotifications,
         limits: {
           ...defaultTelegramConfig.limits,
           commandCooldown: 500,
