@@ -7,6 +7,7 @@ import {
 } from "@shared/user";
 import {
   getUserByEmail,
+  getUserByTelegramId,
   createUser,
   updateUser,
   getUserById,
