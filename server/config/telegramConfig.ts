@@ -89,7 +89,9 @@ export function loadTelegramConfig(): AppTelegramConfig {
     // Переопределяем значения из environment variables если они есть
     token: process.env.TELEGRAM_BOT_TOKEN || defaultTelegramConfig.token,
     notificationChatId:
-      process.env.TELEGRAM_CHAT_ID || defaultTelegramConfig.notificationChatId,
+      process.env.TELEGRAM_CHAT_ID ||
+      process.env.TELEGRAM_NOTIFICATION_CHAT_ID ||
+      defaultTelegramConfig.notificationChatId,
     adminChatId:
       process.env.TELEGRAM_ADMIN_CHAT_ID || defaultTelegramConfig.adminChatId,
     webhookUrl:
