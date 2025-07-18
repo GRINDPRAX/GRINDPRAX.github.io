@@ -281,9 +281,20 @@ export default function Admin() {
               variant="ghost"
               size="sm"
               className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
+              onClick={async () => {
+                try {
+                  const response = await fetch("/api/telegram/test", {
+                    method: "POST",
+                  });
+                  const result = await response.json();
+                  alert(result.message);
+                } catch (error) {
+                  alert("Ошибка тестирования Telegram");
+                }
+              }}
             >
               <MessageSquare className="h-4 w-4 mr-1" />
-              Телеграм
+              Тест Телеграм
             </Button>
           </div>
         </div>
