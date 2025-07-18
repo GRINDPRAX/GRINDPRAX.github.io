@@ -238,9 +238,9 @@ export default function Admin() {
         <div className="text-muted-foreground">Загрузка...</div>
       </div>
     );
-  }
+    }
 
-    return (
+  return (
     <div className="dark min-h-screen bg-background text-foreground">
       <TopNavigation user={user} />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
