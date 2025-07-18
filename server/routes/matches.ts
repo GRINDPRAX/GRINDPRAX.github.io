@@ -41,8 +41,13 @@ export const createNewMatch: RequestHandler[] = [
   requireAuth,
   requireAdmin,
   (req, res) => {
-    const { name, teamSize } = req.body as CreateMatchRequest;
-    const adminId = (req as any).userId;
+    const {
+      name,
+      teamSize,
+      adminId: customAdminId,
+    } = req.body as CreateMatchRequest;
+    const defaultAdminId = (req as any).userId;
+    const adminId = customAdminId || defaultAdminId;
 
     if (!name || !teamSize || teamSize < 2 || teamSize > 5) {
       return res.status(400).json({ error: "Invalid match parameters" });
