@@ -347,6 +347,28 @@ export default function Auth() {
               </Button>
             </form>
           )}
+
+          {/* Telegram Login */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-border/50" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">или</span>
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full mt-4 bg-[#0088cc] hover:bg-[#0088cc]/90 text-white border-[#0088cc]"
+              onClick={handleTelegramAuth}
+              disabled={loading}
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Войти через Telegram
+            </Button>
+          </div>
         </Card>
 
         {/* Back to Home */}
