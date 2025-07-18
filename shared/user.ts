@@ -23,6 +23,7 @@ export interface UserProfile {
   email: string;
   nickname: string;
   avatar?: string;
+  banner?: string;
   rating: number;
   kills: number;
   deaths: number;
