@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Clock, Users, Trophy } from "lucide-react";
 import { UserProfile } from "@shared/user";
 import { Match as GameMatch } from "@shared/match";
+import TopNavigation from "@/components/TopNavigation";
 
 interface Banner {
   id: number;
@@ -433,7 +434,7 @@ export default function Home() {
                   >
                     {user
                       ? match.currentPlayers.length >= match.maxPlayers
-                        ? "��атч полный"
+                        ? "Матч полный"
                         : "Присоединиться"
                       : "Войти для участия"}
                   </Button>
