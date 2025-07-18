@@ -65,10 +65,9 @@ export function createServer() {
   app.put("/api/auth/profile", updateProfile);
   app.post("/api/auth/logout", logout);
 
-  // Telegram test endpoint (admin only)
+  // Telegram management endpoints
   app.post("/api/telegram/test", async (req, res) => {
     try {
-      const { TelegramService } = await import("./telegramService");
       const success = await TelegramService.testConnection();
       res.json({
         success,
@@ -80,6 +79,98 @@ export function createServer() {
       res
         .status(500)
         .json({ success: false, message: "Error testing Telegram" });
+    }
+  });
+
+  // Get bot status
+  app.get("/api/telegram/status", (req, res) => {
+    try {
+      const isConnected = TelegramService.isConnected();
+      const config = TelegramService.getConfig();
+
+      res.json({
+        success: true,
+        connected: isConnected,
+        config: {
+          enableNotifications: config.enableNotifications,
+          enableAuth: config.enableAuth,
+          autoCreateUsers: config.autoCreateUsers,
+          hasToken: !!config.token && config.token !== "YOUR_BOT_TOKEN_HERE",
+          hasNotificationChannel: !!config.notificationChatId,
+          features: config.features,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error getting bot status",
+      });
+    }
+  });
+
+  // Update bot configuration
+  app.put("/api/telegram/config", (req, res) => {
+    try {
+      const updates = req.body;
+      TelegramService.updateConfig(updates);
+
+      res.json({
+        success: true,
+        message: "Configuration updated successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error updating configuration",
+      });
+    }
+  });
+
+  // Restart bot
+  app.post("/api/telegram/restart", (req, res) => {
+    try {
+      TelegramService.restartBot();
+
+      res.json({
+        success: true,
+        message: "Bot restarted successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error restarting bot",
+      });
+    }
+  });
+
+  // Send custom notification
+  app.post("/api/telegram/notify", async (req, res) => {
+    try {
+      const { message, channel } = req.body;
+
+      if (!message) {
+        return res.status(400).json({
+          success: false,
+          message: "Message is required",
+        });
+      }
+
+      const success = await TelegramService.sendCustomNotification(
+        message,
+        channel,
+      );
+
+      res.json({
+        success,
+        message: success
+          ? "Notification sent successfully"
+          : "Failed to send notification",
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Error sending notification",
+      });
     }
   });
 
