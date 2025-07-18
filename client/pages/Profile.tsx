@@ -14,6 +14,7 @@ import {
   Clock,
   History,
 } from "lucide-react";
+import TopNavigation from "@/components/TopNavigation";
 
 export default function Profile() {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -223,84 +224,7 @@ export default function Profile() {
 
   return (
     <div className="dark min-h-screen bg-background text-foreground">
-      {/* Top Navigation */}
-      <nav className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-14 items-center justify-between">
-            {/* Left side navigation */}
-            <div className="flex items-center space-x-8">
-              <div className="flex items-center space-x-6">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/80 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/")}
-                >
-                  🏠 Главная
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/top")}
-                >
-                  ⚡ Топ
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                >
-                  🛒 Магазин
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/statistics")}
-                >
-                  📊 Статистика
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/match-history")}
-                >
-                  <History className="h-4 w-4 mr-1" />
-                  История матчей
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/admin")}
-                >
-                  🛡️ Администрация
-                </Button>
-              </div>
-            </div>
-
-            {/* Right side */}
-            <div className="flex items-center space-x-4">
-              <Badge
-                variant="secondary"
-                className="bg-primary text-primary-foreground rounded-md px-2 py-1 cursor-pointer hover:bg-primary/90 transition-colors"
-              >
-                {user.nickname.slice(0, 2).toUpperCase()}
-              </Badge>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleLogout}
-                className="text-foreground/70 hover:text-foreground"
-              >
-                Выйти
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <TopNavigation user={user} onLogout={handleLogout} />
 
       {/* Secondary Navigation */}
       <div className="border-b border-border/50 bg-background/80">
@@ -439,7 +363,7 @@ export default function Profile() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <Trophy className="h-4 w-4 text-primary" />
-                    <span className="text-sm">Рейтинг</span>
+                    <span className="text-sm">Ре��тинг</span>
                   </div>
                   <span className="font-bold text-primary">{user.rating}</span>
                 </div>
