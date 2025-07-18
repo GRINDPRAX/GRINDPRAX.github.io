@@ -32,9 +32,18 @@ import {
   deleteUserHandler,
   toggleAdminStatus,
 } from "./routes/userManagement";
+import { TelegramService } from "./telegramService";
 
 export function createServer() {
   const app = express();
+
+  // Инициализация Telegram бота при запуске сервера
+  console.log("🚀 Initializing Telegram bot...");
+  if (TelegramService.isConnected()) {
+    console.log("✅ Telegram bot started successfully");
+  } else {
+    console.log("⚠️ Telegram bot not connected - check configuration");
+  }
 
   // Middleware
   app.use(cors());
