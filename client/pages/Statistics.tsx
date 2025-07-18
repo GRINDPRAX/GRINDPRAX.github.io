@@ -41,25 +41,10 @@ export default function Statistics() {
 
     loadUserStatistics();
   }, []);
-    return (
+
+  return (
     <div className="dark min-h-screen bg-background text-foreground">
       <TopNavigation user={user} />
-                  {user.nickname.slice(0, 2).toUpperCase()}
-                </Badge>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => navigate("/auth")}
-                  className="text-foreground hover:bg-muted/50"
-                >
-                  Войти
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
@@ -110,7 +95,7 @@ export default function Statistics() {
                 ) : (
                   <div className="text-center">
                     <Button onClick={() => navigate("/auth")}>
-                      Войти в акка��нт
+                      Войти в аккаунт
                     </Button>
                   </div>
                 )}
@@ -202,7 +187,7 @@ export default function Statistics() {
 
                   <Card className="p-4 bg-card border-border/50 rounded-xl">
                     <div className="flex items-center space-x-3">
-                      <div className="text-blue-400">���</div>
+                      <div className="text-blue-400">📅</div>
                       <div>
                         <div className="text-sm font-medium text-foreground">
                           {user?.registrationDate
