@@ -25,6 +25,52 @@ export default function Auth() {
     password: "",
   });
 
+  // Telegram auth
+  const handleTelegramAuth = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      // Check if Telegram WebApp API is available
+      if (typeof window !== "undefined" && (window as any).Telegram?.WebApp) {
+        const tg = (window as any).Telegram.WebApp;
+        const initData = tg.initData;
+
+        if (initData) {
+          const response = await fetch("/api/auth/telegram", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ initData }),
+          });
+
+          const data: AuthResponse = await response.json();
+
+          if (data.success && data.token) {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+            navigate("/");
+          } else {
+            setError(data.message || "Ошибка авторизации через Telegram");
+          }
+        } else {
+          setError("Не удалось получить данные из Telegram");
+        }
+      } else {
+        // Fallback: Open Telegram bot link
+        const botUsername = "YOUR_BOT_USERNAME"; // Replace with actual bot username
+        const authUrl = `https://t.me/${botUsername}?start=auth`;
+        window.open(authUrl, "_blank");
+        setError("Перейдите в Telegram бота для авторизации");
+      }
+    } catch (err) {
+      setError("Ошибка авторизации через Telegram");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
