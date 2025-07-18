@@ -240,6 +240,11 @@ export function getUserByEmail(email: string): User | null {
   return db.users.find((user) => user.email === email) || null;
 }
 
+export function getUserByTelegramId(telegramId: string): User | null {
+  const db = initDatabase();
+  return db.users.find((user) => user.telegramId === telegramId) || null;
+}
+
 export function createUser(userData: Omit<User, "id">): User {
   const db = initDatabase();
 
@@ -316,7 +321,7 @@ export function updateUserStats(
 
   const user = db.users[userIndex];
 
-  // Обновляем статистику
+  // Обновляем статисти��у
   user.kills += kills;
   user.deaths += deaths;
   user.totalMatches += 1;
