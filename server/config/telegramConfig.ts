@@ -94,7 +94,10 @@ export function loadTelegramConfig(): AppTelegramConfig {
       process.env.TELEGRAM_ADMIN_CHAT_ID || defaultTelegramConfig.adminChatId,
     webhookUrl:
       process.env.TELEGRAM_WEBHOOK_URL || defaultTelegramConfig.webhookUrl,
-    enableNotifications: process.env.TELEGRAM_NOTIFICATIONS !== "false",
+    enableNotifications:
+      process.env.NODE_ENV === "production"
+        ? process.env.TELEGRAM_NOTIFICATIONS !== "false"
+        : process.env.TELEGRAM_NOTIFICATIONS === "true",
     enableAuth: process.env.TELEGRAM_AUTH !== "false",
     autoCreateUsers: process.env.TELEGRAM_AUTO_CREATE_USERS !== "false",
   };
@@ -108,10 +111,13 @@ export function validateTelegramConfig(config: AppTelegramConfig): {
   const errors: string[] = [];
 
   if (!config.token || config.token.length < 10) {
-    errors.push("Отсутствует или некорректный TELEGRAM_BOT_TOKEN");
+    errors.push("Отсутст��ует или некорректный TELEGRAM_BOT_TOKEN");
   }
 
-  if (config.enableNotifications && !config.notificationChatId) {
+  if (
+    config.enableNotifications &&
+    (!config.notificationChatId || config.notificationChatId.trim() === "")
+  ) {
     errors.push(
       "Уведомления включены, но не указан TELEGRAM_CHAT_ID или TELEGRAM_NOTIFICATION_CHAT_ID",
     );
