@@ -51,6 +51,7 @@ export function createServer() {
   // Authentication routes
   app.post("/api/auth/login", login);
   app.post("/api/auth/register", register);
+  app.post("/api/auth/telegram", telegramAuth);
   app.get("/api/auth/profile", getProfile);
   app.put("/api/auth/profile", updateProfile);
   app.post("/api/auth/logout", logout);
