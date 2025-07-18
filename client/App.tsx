@@ -33,8 +33,8 @@ const App = () => (
           <Route path="/statistics" element={<Statistics />} />
           <Route path="/top" element={<Top />} />
           <Route path="/lobby/:matchId" element={<Lobby />} />
-          {/* <Route path="/admin" element={<Admin />} />
-          <Route path="/admin/users" element={<AdminUsers />} /> */}
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/users" element={<AdminUsers />} />
           <Route path="/match-history" element={<MatchHistory />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
