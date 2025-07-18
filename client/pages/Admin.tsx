@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { UserProfile } from "@shared/user";
 import { Match } from "@shared/match";
+import TopNavigation from "@/components/TopNavigation";
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -291,7 +292,7 @@ export default function Admin() {
                   className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
                   onClick={() => navigate("/admin/users")}
                 >
-                  👥 Пользователи
+                  👥 Пользов��тели
                 </Button>
               </div>
             </div>
