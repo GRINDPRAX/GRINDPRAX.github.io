@@ -145,12 +145,10 @@ export function validateTelegramConfig(config: AppTelegramConfig): {
 export function getTelegramConfigForEnvironment(
   env: "development" | "production" | "test",
 ): Partial<AppTelegramConfig> {
-  const baseConfig = loadTelegramConfig();
-
   switch (env) {
     case "development":
       return {
-        enableNotifications: baseConfig.enableNotifications,
+        enableNotifications: process.env.TELEGRAM_NOTIFICATIONS === "true",
         limits: {
           ...defaultTelegramConfig.limits,
           commandCooldown: 500,
@@ -158,7 +156,7 @@ export function getTelegramConfigForEnvironment(
       };
     case "production":
       return {
-        enableNotifications: true,
+        enableNotifications: process.env.TELEGRAM_NOTIFICATIONS !== "false",
         limits: {
           ...defaultTelegramConfig.limits,
           commandCooldown: 2000,
