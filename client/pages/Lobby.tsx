@@ -240,6 +240,14 @@ export default function Lobby() {
               <div className="text-sm text-muted-foreground">
                 Формат: {match?.teamSize}x{match?.teamSize} •{" "}
                 {match?.currentPlayers.length}/{match?.maxPlayers} игроков
+                {match?.createdBy && (
+                  <>
+                    {" • "}
+                    <span className="text-primary">
+                      👨‍💼 Админ в игре: {match.createdBy}
+                    </span>
+                  </>
+                )}
               </div>
             </Card>
 
