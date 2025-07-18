@@ -1,0 +1,72 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "email": "demo@example.com",
+      "nickname": "DemoUser",
+      "password": "demo123",
+      "avatar": "",
+      "rating": 1310,
+      "kd": 2.2857142857142856,
+      "registrationDate": "2024-01-15T10:30:00Z",
+      "status": "Администратор",
+      "level": 15,
+      "wins": 47,
+      "losses": 33,
+      "totalMatches": 80,
+      "lastLogin": "2025-07-18T11:13:04.538Z"
+    },
+    {
+      "email": "durov2007@yandex.ru",
+      "nickname": "L.ecYA",
+      "password": "Lecya2024",
+      "avatar": "",
+      "rating": 1000,
+      "kd": 0,
+      "registrationDate": "2025-07-17T14:58:33.455Z",
+      "status": "Новичок",
+      "level": 1,
+      "wins": 0,
+      "losses": 0,
+      "totalMatches": 0,
+      "lastLogin": "2025-07-17T14:58:33.455Z",
+      "id": "1752764313455ef73j"
+    },
+    {
+      "email": "admin@example.com",
+      "nickname": "admin",
+      "password": "admin123",
+      "avatar": "",
+      "rating": 1000,
+      "kd": 0,
+      "registrationDate": "2025-07-17T15:34:52.937Z",
+      "status": "Новичок",
+      "level": 1,
+      "wins": 0,
+      "losses": 0,
+      "totalMatches": 0,
+      "lastLogin": "2025-07-17T15:34:52.937Z",
+      "id": "1752766492937xgjve"
+    },
+    {
+      "email": "telegram_1257964240@telegram.user",
+      "nickname": "User1257964240",
+      "password": "telegram_auth",
+      "avatar": "",
+      "banner": "",
+      "telegramId": "1257964240",
+      "rating": 1000,
+      "kills": 0,
+      "deaths": 0,
+      "kd": 0,
+      "registrationDate": "2025-07-18T11:11:24.702Z",
+      "status": "Игрок",
+      "level": 1,
+      "wins": 0,
+      "losses": 0,
+      "totalMatches": 0,
+      "lastLogin": "2025-07-18T11:15:41.087Z",
+      "id": "1752837084702zgv2k"
+    }
+  ]
+}
