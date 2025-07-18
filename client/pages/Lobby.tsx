@@ -182,6 +182,11 @@ export default function Lobby() {
               <Badge variant="outline">
                 {match?.currentPlayers.length}/{match?.maxPlayers}
               </Badge>
+              {match?.createdBy && (
+                <Badge variant="secondary" className="text-xs">
+                  👨‍💼 Админ: {match.createdBy}
+                </Badge>
+              )}
             </div>
 
             <div className="flex items-center space-x-4">
