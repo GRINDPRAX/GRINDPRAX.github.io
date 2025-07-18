@@ -25,6 +25,7 @@ export interface UserProfile {
   nickname: string;
   avatar?: string;
   banner?: string;
+  telegramId?: string;
   rating: number;
   kills: number;
   deaths: number;
