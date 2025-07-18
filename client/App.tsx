@@ -15,6 +15,7 @@ import Top from "./pages/Top";
 import Lobby from "./pages/Lobby";
 import Admin from "./pages/Admin";
 import AdminUsers from "./pages/AdminUsers";
+import MatchHistory from "./pages/MatchHistory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/lobby/:matchId" element={<Lobby />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/users" element={<AdminUsers />} />
+          <Route path="/match-history" element={<MatchHistory />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
