@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { UserProfile } from "@shared/user";
+import TopNavigation from "@/components/TopNavigation";
 
 export default function Top() {
   const navigate = useNavigate();
