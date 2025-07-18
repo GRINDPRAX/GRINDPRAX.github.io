@@ -131,61 +131,7 @@ export default function MatchHistory() {
 
   return (
     <div className="dark min-h-screen bg-background text-foreground">
-      {/* Top Navigation */}
-      <nav className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-14 items-center justify-between">
-            {/* Left side navigation */}
-            <div className="flex items-center space-x-8">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-foreground/80 hover:text-foreground hover:bg-muted/50"
-                onClick={() => navigate("/")}
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Назад
-              </Button>
-              <div className="flex items-center space-x-6">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/")}
-                >
-                  🏠 Главная
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/profile")}
-                >
-                  👤 Профиль
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-foreground/60 hover:text-foreground hover:bg-muted/50"
-                  onClick={() => navigate("/statistics")}
-                >
-                  📊 Статистика
-                </Button>
-              </div>
-            </div>
-
-            {/* Right side */}
-            <div className="flex items-center space-x-4">
-              <Badge
-                variant="secondary"
-                className="bg-primary text-primary-foreground rounded-md px-2 py-1"
-              >
-                {user.nickname.slice(0, 2).toUpperCase()}
-              </Badge>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <TopNavigation user={user} />
 
       {/* Main Content */}
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
