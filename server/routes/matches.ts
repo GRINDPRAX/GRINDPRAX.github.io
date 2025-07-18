@@ -72,7 +72,7 @@ export const createNewMatch: RequestHandler[] = [
 ];
 
 // Присоединиться к матчу
-export const joinMatchHandler: RequestHandler = (req, res) => {
+export const joinMatchHandler: RequestHandler = async (req, res) => {
   const { matchId, userId } = req.body as JoinMatchRequest;
 
   if (!matchId || !userId) {
@@ -87,6 +87,31 @@ export const joinMatchHandler: RequestHandler = (req, res) => {
   const updatedMatch = joinMatch(matchId, userId);
   if (!updatedMatch) {
     return res.status(400).json({ error: "Cannot join match" });
+  }
+
+  // Send Telegram notification when player joins
+  try {
+    await TelegramService.notifyPlayerJoined(
+      updatedMatch.name,
+      user.nickname,
+      updatedMatch.currentPlayers.length,
+      updatedMatch.maxPlayers,
+    );
+
+    // If match is full, start the game and send start notification
+    if (updatedMatch.currentPlayers.length >= updatedMatch.maxPlayers) {
+      const playerNames = updatedMatch.currentPlayers
+        .map((playerId) => getUserById(playerId)?.nickname || playerId)
+        .filter(Boolean);
+
+      await TelegramService.notifyGameStarted(
+        updatedMatch.name,
+        playerNames,
+        updatedMatch.teamSize,
+      );
+    }
+  } catch (error) {
+    console.error("Failed to send Telegram notification:", error);
   }
 
   res.json(updatedMatch);
