@@ -240,10 +240,9 @@ export default function Admin() {
     );
   }
 
-  return (
+    return (
     <div className="dark min-h-screen bg-background text-foreground">
-      {/* Top Navigation */}
-      <nav className="border-b border-border/50 bg-background/95 backdrop-blur-sm">
+      <TopNavigation user={user} />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-14 items-center justify-between">
             <div className="flex items-center space-x-8">
