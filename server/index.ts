@@ -7,6 +7,7 @@ import {
   getProfile,
   updateProfile,
   logout,
+  telegramAuth,
 } from "./routes/auth";
 import {
   getUserStatistics,
