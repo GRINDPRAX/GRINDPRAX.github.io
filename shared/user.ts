@@ -4,6 +4,7 @@ export interface User {
   nickname: string;
   password: string; // В реальном проекте должен быть хэширован
   avatar?: string;
+  banner?: string;
   rating: number;
   kills: number; // Total kills
   deaths: number; // Total deaths
