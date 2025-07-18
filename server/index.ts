@@ -33,16 +33,35 @@ import {
   toggleAdminStatus,
 } from "./routes/userManagement";
 import { TelegramService } from "./telegramService";
+import { appConfig, displayConfigStatus, validateAppConfig } from "./config";
 
 export function createServer() {
   const app = express();
 
+  // Отображение конфигурации при запуске
+  displayConfigStatus(appConfig);
+
+  // Валидация конфигурации
+  const validation = validateAppConfig(appConfig);
+  if (!validation.isValid) {
+    console.error("❌ Критические ошибки в конфигурации:");
+    validation.errors.forEach((error) => console.error(`   - ${error}`));
+    console.error(
+      "\n🛑 Сервер не может быть запущен с некорректной конфигурацией",
+    );
+    process.exit(1);
+  }
+
   // Инициализация Telegram бота при запуске сервера
-  console.log("🚀 Initializing Telegram bot...");
-  if (TelegramService.isConnected()) {
-    console.log("✅ Telegram bot started successfully");
+  if (appConfig.features.enableTelegram) {
+    console.log("🚀 Initializing Telegram bot...");
+    if (TelegramService.isConnected()) {
+      console.log("✅ Telegram bot started successfully");
+    } else {
+      console.log("⚠️ Telegram bot not connected - check configuration");
+    }
   } else {
-    console.log("⚠️ Telegram bot not connected - check configuration");
+    console.log("⏭️ Telegram bot disabled - skipping initialization");
   }
 
   // Middleware
@@ -87,10 +106,12 @@ export function createServer() {
     try {
       const isConnected = TelegramService.isConnected();
       const config = TelegramService.getConfig();
+      const validation = validateAppConfig(appConfig);
 
       res.json({
         success: true,
         connected: isConnected,
+        enabled: appConfig.features.enableTelegram,
         config: {
           enableNotifications: config.enableNotifications,
           enableAuth: config.enableAuth,
@@ -98,6 +119,11 @@ export function createServer() {
           hasToken: !!config.token && config.token !== "YOUR_BOT_TOKEN_HERE",
           hasNotificationChannel: !!config.notificationChatId,
           features: config.features,
+        },
+        validation: {
+          isValid: validation.isValid,
+          errors: validation.errors,
+          warnings: validation.warnings,
         },
       });
     } catch (error) {
