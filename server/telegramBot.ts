@@ -50,6 +50,7 @@ export class TelegramBotService {
     this.bot.setMyCommands([
       { command: "start", description: "Начать работу с ботом" },
       { command: "login", description: "Войти в систему" },
+      { command: "link", description: "Получить ссылку для входа" },
       { command: "profile", description: "Посмотреть профиль" },
       { command: "matches", description: "Активные матчи" },
       { command: "help", description: "Помощь" },
@@ -130,7 +131,7 @@ export class TelegramBotService {
           await this.sendMessage(
             chatId,
             `
-✅ <b>Аккаунт создан!</b>
+�� <b>Аккаунт создан!</b>
 
 🎮 <b>Никнейм:</b> ${user.nickname}
 ⭐ <b>Рейтинг:</b> ${user.rating}
