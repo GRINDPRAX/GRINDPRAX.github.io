@@ -57,6 +57,41 @@ export default function Auth() {
     checkTelegramStatus();
   }, [searchParams]);
 
+  // Handle login token from Telegram bot
+  const handleTokenLogin = async (loginToken: string) => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/auth/telegram", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ loginToken }),
+      });
+
+      const data: AuthResponse = await response.json();
+
+      if (data.success && data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // Remove loginToken from URL
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+
+        navigate("/");
+      } else {
+        setError(data.message || "Ошибка авторизации по токену");
+      }
+    } catch (err) {
+      setError("Ошибка авторизации по токену");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Telegram auth
   const handleTelegramAuth = async () => {
     setLoading(true);
@@ -98,7 +133,7 @@ export default function Auth() {
         // window.open(`https://t.me/YOUR_BOT_USERNAME`, "_blank");
       }
     } catch (err) {
-      setError("Ошибка авторизации через Telegram");
+      setError("Ошибка а��торизации через Telegram");
     } finally {
       setLoading(false);
     }
