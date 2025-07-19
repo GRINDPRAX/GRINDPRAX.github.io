@@ -8,6 +8,11 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "0.0.0.0",
     port: 8080,
+    cors: true,
+    hmr: {
+      host: "evo-faceit.ru",
+      port: 8080,
+    },
   },
   build: {
     outDir: "dist/spa",
