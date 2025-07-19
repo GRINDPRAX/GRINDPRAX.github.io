@@ -7,11 +7,11 @@ import { createServer } from "./server";
 export default defineConfig(({ mode }) => ({
   server: {
     host: "0.0.0.0",
-    port: 8080,
+    port: 80,
     cors: true,
     hmr: {
       host: "evo-faceit.ru",
-      port: 8080,
+      port: 80,
     },
   },
   build: {
