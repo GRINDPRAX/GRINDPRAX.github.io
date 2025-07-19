@@ -244,64 +244,50 @@ export const logout: RequestHandler = (req, res) => {
   }
 };
 
+// Temporary login tokens storage
+const tempLoginTokens = new Map<
+  string,
+  { telegramId: string; expires: number }
+>();
+
 export const telegramAuth: RequestHandler = (req, res) => {
   try {
-    const { initData } = req.body;
+    const { loginToken } = req.body;
 
-    if (!initData) {
+    if (!loginToken) {
       const response: AuthResponse = {
         success: false,
-        message: "Данные Telegram не предоставлены",
+        message: "Токен для входа не предоставлен",
       };
       return res.status(400).json(response);
     }
 
-    // Parse Telegram init data
-    const urlParams = new URLSearchParams(initData);
-    const userParam = urlParams.get("user");
-
-    if (!userParam) {
+    // Check if login token exists and is valid
+    const tempToken = tempLoginTokens.get(loginToken);
+    if (!tempToken || tempToken.expires < Date.now()) {
+      tempLoginTokens.delete(loginToken);
       const response: AuthResponse = {
         success: false,
-        message: "Данные пользователя Telegram не найдены",
+        message: "Токен для входа недействителен или истек",
       };
-      return res.status(400).json(response);
+      return res.status(401).json(response);
     }
 
-    const telegramUser = JSON.parse(userParam);
-    const telegramId = telegramUser.id.toString();
-
-    // Check if user exists by Telegram ID
-    let user = getUserByTelegramId(telegramId);
-
+    // Get user by Telegram ID
+    const user = getUserByTelegramId(tempToken.telegramId);
     if (!user) {
-      // Create new user with Telegram data
-      const newUser = createUser({
-        email: `telegram_${telegramId}@telegram.user`,
-        nickname:
-          telegramUser.first_name +
-          (telegramUser.last_name ? ` ${telegramUser.last_name}` : ""),
-        password: "telegram_auth", // Placeholder password for Telegram users
-        avatar: telegramUser.photo_url || "",
-        banner: "",
-        telegramId: telegramId,
-        rating: 1000,
-        kills: 0,
-        deaths: 0,
-        kd: 0,
-        registrationDate: new Date().toISOString(),
-        status: "Игрок",
-        level: 1,
-        wins: 0,
-        losses: 0,
-        totalMatches: 0,
-        lastLogin: new Date().toISOString(),
-      });
-      user = newUser;
-    } else {
-      // Update last login
-      updateUser(user.id, { lastLogin: new Date().toISOString() });
+      const response: AuthResponse = {
+        success: false,
+        message: "Пользователь не найден",
+      };
+      return res.status(404).json(response);
     }
+
+    // Remove used token
+    tempLoginTokens.delete(loginToken);
+
+    // Update last login
+    updateUser(user.id, { lastLogin: new Date().toISOString() });
 
     const token = createSession(user.id);
 
@@ -319,4 +305,24 @@ export const telegramAuth: RequestHandler = (req, res) => {
     };
     res.status(500).json(response);
   }
+};
+
+// Generate temporary login token for Telegram user
+export const generateTelegramLoginToken = (telegramId: string): string => {
+  const token =
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15);
+  const expires = Date.now() + 5 * 60 * 1000; // 5 minutes
+
+  tempLoginTokens.set(token, { telegramId, expires });
+
+  // Clean up expired tokens
+  setTimeout(
+    () => {
+      tempLoginTokens.delete(token);
+    },
+    5 * 60 * 1000,
+  );
+
+  return token;
 };
