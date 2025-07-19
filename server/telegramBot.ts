@@ -243,7 +243,7 @@ export class TelegramBotService {
       if (!user) {
         await this.sendMessage(
           chatId,
-          "❌ Пользователь не найден. Используйте /login для входа.",
+          "❌ Пользователь н�� найден. Используйте /login для входа.",
         );
         return;
       }
@@ -278,7 +278,7 @@ export class TelegramBotService {
         `
 🎮 <b>Активные матчи</b>
 
-🔄 <i>Интеграция с системой матчей в разработке...</i>
+🔄 <i>Интеграция с системой ма��чей в разработке...</i>
 
 Пока вы можете посетить веб-сайт для просмотра и участия в матчах.`,
       );
@@ -319,7 +319,7 @@ export class TelegramBotService {
         `
 ⚙️ <b>Настройки аккаунта</b>
 
-Выберите категорию настроек:`,
+Выберите категорию настрое��:`,
         keyboard,
       );
     });
@@ -364,6 +364,38 @@ export class TelegramBotService {
         await this.bot!.answerCallbackQuery(callbackQuery.id);
 
         switch (data) {
+          case "show_stats":
+            const userId = callbackQuery.from?.id;
+            if (userId) {
+              const user = getUserByTelegramId(userId.toString());
+              if (user) {
+                await this.sendMessage(
+                  chatId,
+                  `
+📊 <b>Статистика ${user.nickname}</b>
+
+⭐ <b>Рейтинг:</b> ${user.rating}
+🏆 <b>Побед:</b> ${user.wins}
+😔 <b>Поражений:</b> ${user.losses}
+🎯 <b>K/D:</b> ${user.kd.toFixed(2)}
+💀 <b>Убийств:</b> ${user.kills}
+☠️ <b>Смертей:</b> ${user.deaths}
+🎮 <b>Всего матчей:</b> ${user.totalMatches}
+🏅 <b>Уровень:</b> ${user.level}
+🎪 <b>Статус:</b> ${user.status}
+
+📅 <b>Регистрация:</b> ${new Date(user.registrationDate).toLocaleDateString("ru-RU")}
+🔄 <b>Последний вход:</b> ${user.lastLogin ? new Date(user.lastLogin).toLocaleDateString("ru-RU") : "Неизвестно"}`,
+                );
+              } else {
+                await this.sendMessage(
+                  chatId,
+                  "❌ Пользователь не найден. Использу��те /login для входа.",
+                );
+              }
+            }
+            break;
+
           case "settings_notifications":
             await this.sendMessage(
               chatId,
