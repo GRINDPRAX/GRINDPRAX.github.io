@@ -7,6 +7,7 @@ import {
 } from "./database";
 import { userToProfile } from "./database";
 import { createSession } from "./middleware";
+import { generateTelegramLoginToken } from "./routes/auth";
 
 export interface TelegramBotConfig {
   token: string;
@@ -153,7 +154,7 @@ export class TelegramBotService {
 🎯 K/D: ${user.kd.toFixed(2)}
 🎮 Всего матчей: ${user.totalMatches}
 
-Используйте /matches для просмотра активных игр!`,
+Используйте /matches для просмотра активных иг��!`,
           );
         } else {
           await this.sendMessage(
@@ -197,7 +198,7 @@ export class TelegramBotService {
 ⭐ Рейтинг: ${user.rating}
 🏆 Побед: ${user.wins}
 😔 Поражений: ${user.losses}
-🎯 K/D: ${user.kd.toFixed(2)}
+�� K/D: ${user.kd.toFixed(2)}
 💀 Убийств: ${user.kills}
 ☠️ Смертей: ${user.deaths}
 🎮 Всего матчей: ${user.totalMatches}
@@ -274,7 +275,7 @@ export class TelegramBotService {
 📖 <b>Справка по командам</b>
 
 <b>Основные команды:</b>
-/start - Начать работу с ботом
+/start - Начать работу с ��отом
 /login - Войти в систему
 /profile - Посмотреть свой профиль
 /matches - Активные матчи
@@ -313,7 +314,7 @@ export class TelegramBotService {
 🔔 <b>Настройки уведомлений</b>
 
 В разработке:
-• Уведомления о новых матчах
+�� Уведомления о новых матчах
 • Уведомления о приглашениях
 • Уведомления о результатах игр
 • Уведомления о достижениях`,
@@ -356,7 +357,7 @@ export class TelegramBotService {
       }
     });
 
-    // Обработчик ошибок
+    // Обр��ботчик ошибок
     this.bot.on("error", (error) => {
       console.error("Telegram bot error:", error);
     });
@@ -453,7 +454,7 @@ export class TelegramBotService {
       return false;
 
     const message = `
-👤 <b>Новый игрок присоединился!</b>
+👤 <b>Новый игрок п��исоединился!</b>
 
 📋 <b>Матч:</b> ${matchName}
 🎮 <b>Игрок:</b> ${playerName}
