@@ -21,6 +21,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [telegramAvailable, setTelegramAvailable] = useState(false);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const [loginForm, setLoginForm] = useState<LoginRequest>({
@@ -80,7 +81,7 @@ export default function Auth() {
             setError(data.message || "Ошибка авторизации через Telegram");
           }
         } else {
-          setError("Не удалось получить данные ��з Telegram");
+          setError("Не удалось получить данные из Telegram");
         }
       } else {
         // Fallback: Show instructions or open bot
