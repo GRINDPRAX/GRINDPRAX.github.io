@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthResponse, LoginRequest, RegisterRequest } from "@shared/user";
 import {
   Eye,
@@ -80,7 +80,7 @@ export default function Auth() {
             setError(data.message || "Ошибка авторизации через Telegram");
           }
         } else {
-          setError("Не удалось получить данные из Telegram");
+          setError("Не удалось получить данные ��з Telegram");
         }
       } else {
         // Fallback: Show instructions or open bot
