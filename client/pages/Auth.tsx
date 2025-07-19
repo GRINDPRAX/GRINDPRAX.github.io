@@ -35,8 +35,14 @@ export default function Auth() {
     password: "",
   });
 
-  // Check Telegram availability
+  // Check for login token and handle automatic authentication
   useEffect(() => {
+    const loginToken = searchParams.get("loginToken");
+
+    if (loginToken) {
+      handleTokenLogin(loginToken);
+    }
+
     const checkTelegramStatus = async () => {
       try {
         const response = await fetch("/api/telegram/status");
@@ -49,7 +55,7 @@ export default function Auth() {
     };
 
     checkTelegramStatus();
-  }, []);
+  }, [searchParams]);
 
   // Telegram auth
   const handleTelegramAuth = async () => {
