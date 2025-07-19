@@ -7,6 +7,7 @@ import {
 } from "./database";
 import { userToProfile } from "./database";
 import { createSession } from "./middleware";
+import { generateTelegramLoginToken } from "./routes/auth";
 
 export interface TelegramBotConfig {
   token: string;
@@ -49,6 +50,7 @@ export class TelegramBotService {
     this.bot.setMyCommands([
       { command: "start", description: "Начать работу с ботом" },
       { command: "login", description: "Войти в систему" },
+      { command: "link", description: "Получить ссылку для входа" },
       { command: "profile", description: "Посмотреть профиль" },
       { command: "matches", description: "Активные матчи" },
       { command: "help", description: "Помощь" },
@@ -72,10 +74,10 @@ export class TelegramBotService {
 Я помогу вам:
 • 🔐 Войти в систему
 • 📊 Следить за вашими матчами
-• 🏆 Получать уведомления о играх
+• 🏆 Получать уведом��ения о играх
 • ⚙️ Управлять настройками
 
-<b>Доступные команды:</b>
+<b>Д��ступные команды:</b>
 /login - Войти в систему
 /profile - Ваш профиль
 /matches - Активные матчи
@@ -129,33 +131,15 @@ export class TelegramBotService {
           await this.sendMessage(
             chatId,
             `
-✅ <b>Аккаунт создан!</b>
+�� <b>Аккаунт создан!</b>
 
 🎮 <b>Никнейм:</b> ${user.nickname}
 ⭐ <b>Рейтинг:</b> ${user.rating}
 📅 <b>Регистрация:</b> ${new Date().toLocaleDateString("ru-RU")}
 
-Теперь вы можете использовать все функции системы!`,
+Для входа в веб-версию используйте команду /link`,
           );
-        } else if (user) {
-          // Обновляем время последнего входа
-          updateUser(user.id, { lastLogin: new Date().toISOString() });
-
-          await this.sendMessage(
-            chatId,
-            `
-🎉 <b>Добро пожаловать обратно, ${user.nickname}!</b>
-
-📊 <b>Ваша статистика:</b>
-⭐ Рейтинг: ${user.rating}
-🏆 Побед: ${user.wins}
-😔 Поражений: ${user.losses}
-🎯 K/D: ${user.kd.toFixed(2)}
-🎮 Всего матчей: ${user.totalMatches}
-
-Используйте /matches для просмотра активных игр!`,
-          );
-        } else {
+        } else if (!user) {
           await this.sendMessage(
             chatId,
             `
@@ -163,12 +147,86 @@ export class TelegramBotService {
 
 Автоматическое создание аккаунтов отключено. Обратитесь к администратору для создания аккаунта.`,
           );
+          return;
         }
+
+        // Генерируем временную ссылку для входа
+        const loginToken = generateTelegramLoginToken(userId.toString());
+        const loginUrl = `http://evo-faceit.ru/auth?loginToken=${loginToken}`;
+
+        const keyboard = {
+          inline_keyboard: [
+            [{ text: "🌐 Войти в веб-версию", url: loginUrl }],
+            [{ text: "📊 Показать статистику", callback_data: "show_stats" }],
+          ],
+        };
+
+        await this.sendMessage(
+          chatId,
+          `
+🔐 <b>Временная ссылка для входа</b>
+
+👋 Привет, ${user.nickname}!
+
+🔗 <b>Ссылка действительна 5 минут</b>
+Нажмите кнопку ниже для входа в веб-версию:
+
+⚠️ <i>Не передавайте эту ссылку другим людям!</i>`,
+          keyboard,
+        );
       } catch (error) {
         console.error("Login error:", error);
         await this.sendMessage(
           chatId,
           "❌ Ошибка при входе в систему. Попробуйте позже.",
+        );
+      }
+    });
+
+    // Обработчик команды /link
+    this.bot.onText(/\/link/, async (msg) => {
+      const chatId = msg.chat.id;
+      const userId = msg.from?.id;
+
+      if (!userId) return;
+
+      try {
+        const user = getUserByTelegramId(userId.toString());
+
+        if (!user) {
+          await this.sendMessage(
+            chatId,
+            "❌ Пользователь не найден. Используйте /login для создания аккаунта.",
+          );
+          return;
+        }
+
+        // Генерируем временную ссылку для входа
+        const loginToken = generateTelegramLoginToken(userId.toString());
+        const loginUrl = `http://evo-faceit.ru/auth?loginToken=${loginToken}`;
+
+        const keyboard = {
+          inline_keyboard: [[{ text: "🌐 Войти в веб-версию", url: loginUrl }]],
+        };
+
+        await this.sendMessage(
+          chatId,
+          `
+🔐 <b>Ссылка для входа в систему</b>
+
+👋 ${user.nickname}, ваша персональная ссылка для входа:
+
+⏰ <b>Срок действия:</b> 5 минут
+🔒 <b>Безопасность:</b> Одноразовая ссылка
+
+⚠️ <i>Никому не передавайте эту ссылку!</i>`,
+          keyboard,
+        );
+      } catch (error) {
+        console.error("Link generation error:", error);
+        await this.sendMessage(
+          chatId,
+          "❌ Ошибка при генерации ссылки. Попробуйте позже.",
         );
       }
     });
@@ -185,7 +243,7 @@ export class TelegramBotService {
       if (!user) {
         await this.sendMessage(
           chatId,
-          "❌ Пользователь не найден. Используйте /login для входа.",
+          "❌ Пользователь н�� найден. Используйте /login для входа.",
         );
         return;
       }
@@ -210,17 +268,17 @@ export class TelegramBotService {
       await this.sendMessage(chatId, profileMessage);
     });
 
-    // Обработчик команды /matches (будем интегрировать с системой матчей)
+    // Обрабо��чик команды /matches (будем интегрировать с системой матчей)
     this.bot.onText(/\/matches/, async (msg) => {
       const chatId = msg.chat.id;
 
-      // Здесь будет интеграция с системой матчей
+      // Здесь бу��ет интеграция с системой матчей
       await this.sendMessage(
         chatId,
         `
 🎮 <b>Активные матчи</b>
 
-🔄 <i>Интеграция с системой матчей в разработке...</i>
+🔄 <i>Интеграция с системой ма��чей в разработке...</i>
 
 Пока вы можете посетить веб-сайт для просмотра и участия в матчах.`,
       );
@@ -261,7 +319,7 @@ export class TelegramBotService {
         `
 ⚙️ <b>Настройки аккаунта</b>
 
-Выберите категорию настроек:`,
+Выберите категорию настрое��:`,
         keyboard,
       );
     });
@@ -294,7 +352,7 @@ export class TelegramBotService {
       await this.sendMessage(chatId, helpMessage);
     });
 
-    // Обработчик callback-кнопок
+    // Обработч��к callback-кнопок
     this.bot.on("callback_query", async (callbackQuery) => {
       const msg = callbackQuery.message;
       const data = callbackQuery.data;
@@ -306,6 +364,38 @@ export class TelegramBotService {
         await this.bot!.answerCallbackQuery(callbackQuery.id);
 
         switch (data) {
+          case "show_stats":
+            const userId = callbackQuery.from?.id;
+            if (userId) {
+              const user = getUserByTelegramId(userId.toString());
+              if (user) {
+                await this.sendMessage(
+                  chatId,
+                  `
+📊 <b>Статистика ${user.nickname}</b>
+
+⭐ <b>Рейтинг:</b> ${user.rating}
+🏆 <b>Побед:</b> ${user.wins}
+😔 <b>Поражений:</b> ${user.losses}
+🎯 <b>K/D:</b> ${user.kd.toFixed(2)}
+💀 <b>Убийств:</b> ${user.kills}
+☠️ <b>Смертей:</b> ${user.deaths}
+🎮 <b>Всего матчей:</b> ${user.totalMatches}
+🏅 <b>Уровень:</b> ${user.level}
+🎪 <b>Статус:</b> ${user.status}
+
+📅 <b>Регистрация:</b> ${new Date(user.registrationDate).toLocaleDateString("ru-RU")}
+🔄 <b>Последний вход:</b> ${user.lastLogin ? new Date(user.lastLogin).toLocaleDateString("ru-RU") : "Неизвестно"}`,
+                );
+              } else {
+                await this.sendMessage(
+                  chatId,
+                  "❌ Пользователь не найден. Использу��те /login для входа.",
+                );
+              }
+            }
+            break;
+
           case "settings_notifications":
             await this.sendMessage(
               chatId,
@@ -327,7 +417,7 @@ export class TelegramBotService {
 👤 <b>Настройки профиля</b>
 
 Для изменения профиля используйте веб-интерфейс.
-В будущем здесь будет возможность изменять:
+В будущем здесь буде�� возможность изменять:
 • Никнейм
 • Статус
 • Аватар`,
@@ -343,7 +433,7 @@ export class TelegramBotService {
 В разработке:
 • Предпочитаемые режимы игры
 • Настройки приватности
-• Автоматическое участие в матчах`,
+• А��томатическое участие в матчах`,
             );
             break;
 

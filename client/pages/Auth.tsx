@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AuthResponse, LoginRequest, RegisterRequest } from "@shared/user";
 import {
   Eye,
@@ -21,6 +21,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [telegramAvailable, setTelegramAvailable] = useState(false);
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   const [loginForm, setLoginForm] = useState<LoginRequest>({
@@ -34,8 +35,14 @@ export default function Auth() {
     password: "",
   });
 
-  // Check Telegram availability
+  // Check for login token and handle automatic authentication
   useEffect(() => {
+    const loginToken = searchParams.get("loginToken");
+
+    if (loginToken) {
+      handleTokenLogin(loginToken);
+    }
+
     const checkTelegramStatus = async () => {
       try {
         const response = await fetch("/api/telegram/status");
@@ -48,7 +55,42 @@ export default function Auth() {
     };
 
     checkTelegramStatus();
-  }, []);
+  }, [searchParams]);
+
+  // Handle login token from Telegram bot
+  const handleTokenLogin = async (loginToken: string) => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/auth/telegram", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ loginToken }),
+      });
+
+      const data: AuthResponse = await response.json();
+
+      if (data.success && data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // Remove loginToken from URL
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+
+        navigate("/");
+      } else {
+        setError(data.message || "Ошибка авторизации по токену");
+      }
+    } catch (err) {
+      setError("Ошибка авторизации по токену");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Telegram auth
   const handleTelegramAuth = async () => {
@@ -91,7 +133,7 @@ export default function Auth() {
         // window.open(`https://t.me/YOUR_BOT_USERNAME`, "_blank");
       }
     } catch (err) {
-      setError("Ошибка авторизации через Telegram");
+      setError("Ошибка а��торизации через Telegram");
     } finally {
       setLoading(false);
     }
